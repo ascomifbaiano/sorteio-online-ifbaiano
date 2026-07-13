@@ -605,7 +605,10 @@
         container.appendChild(divisoriaSelecionados);
       }
 
-      for (let i = 0; i < total; i++) {
+      // Exibe até a maior quantidade (se houver mais vagas que inscritos, exibe as vagas ociosas)
+      const totalItensExibir = Math.max(total, vagas);
+
+      for (let i = 0; i < totalItensExibir; i++) {
         // Se ultrapassou o número de vagas, renderiza separador de Lista de Espera
         if (i === vagas && vagas > 0) {
           const divisoriaEspera = document.createElement('h4');
@@ -615,16 +618,27 @@
           container.appendChild(divisoriaEspera);
         }
 
-        const candidato = listaSorteada[i];
         const item = document.createElement('div');
-        item.className = `sort-item ${i < vagas ? 'selected' : 'waiting'}`;
         
-        // Formato: Posição | Nome | Número de Inscrição
-        item.innerHTML = `
-          <span class="sort-position">${i + 1}º</span>
-          <span class="sort-name">${candidato.nome}</span>
-          <span class="sort-number">nº ${candidato.numeroOriginal}</span>
-        `;
+        if (i < total) {
+          const candidato = listaSorteada[i];
+          item.className = `sort-item ${i < vagas ? 'selected' : 'waiting'}`;
+          item.innerHTML = `
+            <span class="sort-position">${i + 1}º</span>
+            <span class="sort-name">${candidato.nome}</span>
+            <span class="sort-number">nº ${candidato.numeroOriginal}</span>
+          `;
+        } else {
+          // Vagas ociosas remanescentes
+          item.className = `sort-item selected`;
+          item.style.border = "1px dashed var(--color-warning)";
+          item.style.backgroundColor = "var(--color-warning-bg)";
+          item.innerHTML = `
+            <span class="sort-position" style="color: var(--color-warning);">${i + 1}º</span>
+            <span class="sort-name" style="color: var(--color-warning); font-style: italic; font-weight: 600;">Vaga a preencher ou remanejar</span>
+            <span class="sort-number" style="color: var(--color-warning); font-style: italic;">--</span>
+          `;
+        }
         
         container.appendChild(item);
       }
@@ -644,10 +658,16 @@
       txt += `========================================\n\n`;
       
       txt += `CLASSIFICAÇÃO DOS CANDIDATOS:\n`;
-      sorteioAtual.listaCandidatos.forEach((candidato, index) => {
-        const status = index < sorteioAtual.vagas ? 'SELECIONADO (VAGA REGULAR)' : 'LISTA DE ESPERA';
-        txt += `${index + 1}º - ${candidato.nome} (Inscrição: ${candidato.numeroOriginal}) - [${status}]\n`;
-      });
+      const totalItensExibir = Math.max(sorteioAtual.totalInscritos, sorteioAtual.vagas);
+      for (let index = 0; index < totalItensExibir; index++) {
+        if (index < sorteioAtual.totalInscritos) {
+          const candidato = sorteioAtual.listaCandidatos[index];
+          const status = index < sorteioAtual.vagas ? 'SELECIONADO (VAGA REGULAR)' : 'LISTA DE ESPERA';
+          txt += `${index + 1}º - ${candidato.nome} (Inscrição: ${candidato.numeroOriginal}) - [${status}]\n`;
+        } else {
+          txt += `${index + 1}º - Vaga a preencher ou remanejar (Inscrição: --) - [VAGA REGULAR VAZIA]\n`;
+        }
+      }
       
       navigator.clipboard.writeText(txt).then(() => {
         alert("Ata copiada para a área de transferência com sucesso!");
@@ -663,10 +683,16 @@
       let csv = "\uFEFF"; // BOM para o Excel
       csv += "Classificacao;Nome;NumeroInscricao;Status\n";
       
-      sorteioAtual.listaCandidatos.forEach((candidato, index) => {
-        const status = index < sorteioAtual.vagas ? 'Selecionado' : 'Lista de Espera';
-        csv += `${index + 1};"${candidato.nome.replace(/"/g, '""')}";${candidato.numeroOriginal};${status}\n`;
-      });
+      const totalItensExibir = Math.max(sorteioAtual.totalInscritos, sorteioAtual.vagas);
+      for (let index = 0; index < totalItensExibir; index++) {
+        if (index < sorteioAtual.totalInscritos) {
+          const candidato = sorteioAtual.listaCandidatos[index];
+          const status = index < sorteioAtual.vagas ? 'Selecionado' : 'Lista de Espera';
+          csv += `${index + 1};"${candidato.nome.replace(/"/g, '""')}";${candidato.numeroOriginal};${status}\n`;
+        } else {
+          csv += `${index + 1};"Vaga a preencher ou remanejar";--;Vaga Vazia\n`;
+        }
+      }
       
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -744,7 +770,9 @@
         container.appendChild(divSel);
       }
 
-      for (let i = 0; i < total; i++) {
+      const totalItensExibir = Math.max(total, vagas);
+
+      for (let i = 0; i < totalItensExibir; i++) {
         if (i === vagas && vagas > 0) {
           const divEsp = document.createElement('h4');
           divEsp.style.margin = '25px 0 10px 0';
@@ -753,16 +781,28 @@
           container.appendChild(divEsp);
         }
 
-        const candidatoNumOriginal = ordens[i];
         const item = document.createElement('div');
-        item.className = `sort-item ${i < vagas ? 'selected' : 'waiting'}`;
-        item.id = `aud-item-pos-${i}`;
         
-        item.innerHTML = `
-          <span class="sort-position">${i + 1}º</span>
-          <span class="sort-name">Candidato nº ${candidatoNumOriginal}</span>
-          <span class="sort-number">nº ${candidatoNumOriginal}</span>
-        `;
+        if (i < total) {
+          const candidatoNumOriginal = ordens[i];
+          item.className = `sort-item ${i < vagas ? 'selected' : 'waiting'}`;
+          item.id = `aud-item-pos-${i}`;
+          item.innerHTML = `
+            <span class="sort-position">${i + 1}º</span>
+            <span class="sort-name">Candidato nº ${candidatoNumOriginal}</span>
+            <span class="sort-number">nº ${candidatoNumOriginal}</span>
+          `;
+        } else {
+          item.className = `sort-item selected`;
+          item.id = `aud-item-pos-${i}`;
+          item.style.border = "1px dashed var(--color-warning)";
+          item.style.backgroundColor = "var(--color-warning-bg)";
+          item.innerHTML = `
+            <span class="sort-position" style="color: var(--color-warning);">${i + 1}º</span>
+            <span class="sort-name" style="color: var(--color-warning); font-style: italic; font-weight: 600;">Vaga a preencher ou remanejar</span>
+            <span class="sort-number" style="color: var(--color-warning); font-style: italic;">--</span>
+          `;
+        }
         container.appendChild(item);
       }
     }
@@ -776,10 +816,16 @@
       txt += `Total de Vagas: ${auditoriaAtual.vagas}\n`;
       txt += `========================================\n\n`;
       
-      auditoriaAtual.listaNumeros.forEach((numOriginal, index) => {
-        const status = index < auditoriaAtual.vagas ? 'SELECIONADO' : 'LISTA DE ESPERA';
-        txt += `${index + 1}º colocado: Candidato número ${numOriginal} [${status}]\n`;
-      });
+      const totalItensExibir = Math.max(auditoriaAtual.totalInscritos, auditoriaAtual.vagas);
+      for (let index = 0; index < totalItensExibir; index++) {
+        if (index < auditoriaAtual.totalInscritos) {
+          const numOriginal = auditoriaAtual.listaNumeros[index];
+          const status = index < auditoriaAtual.vagas ? 'SELECIONADO' : 'LISTA DE ESPERA';
+          txt += `${index + 1}º colocado: Candidato número ${numOriginal} [${status}]\n`;
+        } else {
+          txt += `${index + 1}º colocado: Vaga a preencher ou remanejar [VAGA VAZIA]\n`;
+        }
+      }
       
       navigator.clipboard.writeText(txt).then(() => {
         alert("Lista de auditoria copiada!");
