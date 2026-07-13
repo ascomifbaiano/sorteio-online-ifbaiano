@@ -455,6 +455,30 @@ textarea:disabled {
   color: var(--color-warning);
 }
 
+.semente-destaque {
+  font-size: 0.9rem !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.semente-destaque b {
+  font-size: 1.15rem;
+  margin-left: 5px;
+  color: var(--accent-color);
+  background-color: rgba(200, 7, 16, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px dashed var(--accent-color);
+}
+
+body.high-contrast .semente-destaque b {
+  color: var(--primary-color);
+  background-color: transparent;
+  border-color: var(--primary-color);
+}
+
 /* Lista de Sorteados */
 .sort-list {
   display: flex;
@@ -668,6 +692,27 @@ footer {
   .card.print-visible #sort-empty-state,
   .card.print-visible .result-actions {
     display: none !important;
+  }
+
+  /* Destaque especial da Semente na impressão da Ata */
+  .semente-destaque {
+    font-size: 11pt !important;
+    border: 1px solid #000000 !important;
+    padding: 4px 8px !important;
+    display: inline-block !important;
+    background: #EEEEEE !important;
+    color: #000000 !important;
+    border-radius: 4px !important;
+    page-break-inside: avoid;
+  }
+  
+  .semente-destaque b {
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    color: #000000 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
   }
 
   .sort-list {

@@ -99,6 +99,7 @@ Como a aplicação é construída com tecnologias web nativas sem necessidade de
 ## 📝 Log de Atualizações (Changelog)
 
 *   **13/07/2026 (Atual):**
+    *   Realce visual da semente de auditoria, tanto no painel do sistema (tamanho de fonte expandido, fonte mono, borda tracejada e cor de acento) quanto na ata de impressão oficial (bloco com borda preta fina, fundo cinza e texto ampliado para fácil leitura).
     *   Correção de bug na folha de estilos de impressão (`@media print`) e HTML que impedia a exibição do resultado e do bloco de assinaturas oficiais de testemunhas e servidores na ata impressa.
     *   Remoção do bloqueio que impedia sorteios com número de vagas maior que o número de inscritos (ex: 2 candidatos para 15 vagas), viabilizando certames com concorrência abaixo da oferta.
     *   Ajuste e polimento de textos institucionais no cabeçalho e na seção informativa de auditoria pública.
