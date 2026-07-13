@@ -38,7 +38,7 @@
       </div>
       <div class="header-info">
         <h1>Sorteio Eletrônico Público</h1>
-        <p>Plataforma oficial de sorteio de vagas e auditoria pública de sementes (seeds) do IF Baiano.</p>
+        <p>Plataforma oficial de sorteio de vagas e auditoria pública do Instituto Federal Baiano.</p>
       </div>
     </header>
 
@@ -143,7 +143,7 @@
         </section>
 
         <!-- Resultados e Visualização da Ata de Sorteio -->
-        <section class="card" style="position: relative; min-height: 400px;">
+        <section class="card print-visible" style="position: relative; min-height: 400px;">
           <!-- Loader de Embaralhamento -->
           <div id="sort-loader" class="loader-overlay">
             <div class="spinner"></div>
@@ -248,7 +248,7 @@
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
               </svg>
               <div>
-                <b>O que é Auditoria?</b> Qualquer sorteio eletrônico oficial do IF Baiano publica sua <b>Semente (Seed)</b> ao final. Informando a mesma semente, o mesmo número de candidatos e a mesma quantidade de vagas, o sistema gerará <b>exatamente o mesmo resultado</b> por meio do algoritmo matemático próprio **IFBSort**.
+                <b>O que é Auditoria?</b> Qualquer sorteio eletrônico oficial do IF Baiano publica sua Semente ao final. Informando a mesma semente, o mesmo número de candidatos e a mesma quantidade de vagas, o sistema gerará exatamente o mesmo resultado.
               </div>
             </div>
 
@@ -342,9 +342,9 @@
 
     <!-- Rodapé -->
     <footer>
-      <p>© 2026 Instituto Federal de Educação, Ciência e Tecnologia Baiano - IF Baiano</p>
+      <p>Desenvolvido pela DiCom - Diretoria de Comunicação</p>
       <p style="font-size: 0.75rem; margin-top: 5px; opacity: 0.8;">
-        Algoritmo de Sorteio Eletrônico IFBSort: LCG de Park-Miller de 32-bits e Embaralhamento Fisher-Yates integrado.
+        IF Baiano
       </p>
     </footer>
   </div>
@@ -531,13 +531,6 @@
           numeroOriginal: index + 1,
           nome: nome
         }));
-      }
-
-      if (vagas > total) {
-        alert("O número de vagas não pode ser maior que o número total de candidatos.");
-        loader.classList.remove('active');
-        emptyState.style.display = 'block';
-        return;
       }
 
       // Semente

@@ -662,10 +662,12 @@ footer {
     padding: 0;
   }
 
-  .card-title {
-    color: #000000;
-    border-bottom: 2px solid #000000;
-    font-size: 14pt;
+  /* Ocultar elementos desnecessários na ata impressa */
+  .card.print-visible .card-title,
+  .card.print-visible .loader-overlay,
+  .card.print-visible #sort-empty-state,
+  .card.print-visible .result-actions {
+    display: none !important;
   }
 
   .sort-list {
@@ -688,8 +690,8 @@ footer {
   }
 
   .print-signatures {
+    display: grid !important; /* Força a exibição das assinaturas na ata impressa */
     margin-top: 50px;
-    display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
     page-break-inside: avoid;

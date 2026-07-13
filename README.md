@@ -99,6 +99,10 @@ Como a aplicação é construída com tecnologias web nativas sem necessidade de
 ## 📝 Log de Atualizações (Changelog)
 
 *   **13/07/2026 (Atual):**
+    *   Correção de bug na folha de estilos de impressão (`@media print`) e HTML que impedia a exibição do resultado e do bloco de assinaturas oficiais de testemunhas e servidores na ata impressa.
+    *   Remoção do bloqueio que impedia sorteios com número de vagas maior que o número de inscritos (ex: 2 candidatos para 15 vagas), viabilizando certames com concorrência abaixo da oferta.
+    *   Ajuste e polimento de textos institucionais no cabeçalho e na seção informativa de auditoria pública.
+    *   Assinatura de desenvolvimento institucional da DiCom (Diretoria de Comunicação - IF Baiano) inserida no rodapé.
     *   Remoção do arquivo legado `seedrandom.js` do IFSC.
     *   Desenvolvimento do algoritmo próprio **IFBSort** (com LCG Park-Miller de 32 bits, hash de string DJB2 e Knuth-Shuffle/Fisher-Yates) para garantir independência absoluta de código de terceiros.
     *   Inclusão do guia de uso detalhado ("Como Usar") para organizadores e candidatos auditores no README.
@@ -107,4 +111,3 @@ Como a aplicação é construída com tecnologias web nativas sem necessidade de
     *   Implementação do seletor dinâmico de acessibilidade (Alto Contraste e Zoom de Fontes).
     *   Implementação da entrada flexível de candidatos (por quantidade numérica ou colagem de lista de nomes/inscrições).
     *   Criação da ferramenta de confronto automático de listas na aba de auditoria, facilitando a identificação imediata de divergências.
-    *   Adicionados estilos específicos para impressão de atas oficiais de sorteio (`@media print`) contendo campos de assinatura para testemunhas e servidores.
