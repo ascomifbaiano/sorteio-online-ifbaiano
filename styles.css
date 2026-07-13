@@ -733,20 +733,4 @@ footer {
     color: #000000;
     font-weight: bold;
   }
-
-  .print-signatures {
-    display: grid !important; /* Força a exibição das assinaturas na ata impressa */
-    margin-top: 50px;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    page-break-inside: avoid;
-  }
-
-  .signature-line {
-    border-top: 1px solid #000000;
-    text-align: center;
-    padding-top: 8px;
-    font-size: 10pt;
-    margin-top: 40px;
-  }
 }

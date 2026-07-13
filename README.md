@@ -12,7 +12,7 @@ A aplicação foi projetada para ser hospedada diretamente no **GitHub Pages**, 
     *   Geração automática de semente (*seed*) baseada no timestamp Unix do momento do sorteio (13 dígitos de milissegundos), garantindo aleatoriedade real na inicialização.
     *   Opção de inserção manual de semente para reaplicação ou auditoria controlada.
     *   Efeito visual dinâmico de embaralhamento (*micro-animations*) e feedback visual da distribuição de vagas da 1ª chamada e lista de espera.
-    *   Ferramentas integradas para cópia do resultado em texto formatado para atas, exportação em formato `.csv` (compatível com Excel) e impressão direta da ata de sorteio formatada com espaços para assinatura de testemunhas.
+    *   Ferramentas integradas para cópia do resultado em texto formatado para atas, exportação em formato `.csv` (compatível com Excel) e impressão direta da ata de sorteio formatada e pronta para publicação e assinatura digital via SUAP.
 *   **Auditoria Pública de Sementes (Transparência):**
     *   Painel dedicado para candidatos, órgãos de controle e cidadãos auditarem qualquer sorteio já realizado.
     *   Garantia de 100% de paridade lógica e auditoria transparente por meio de algoritmo matemático próprio documentado.
@@ -54,7 +54,7 @@ A nova lógica de sorteio do IF Baiano (**IFBSort**) foi projetada para ser tota
 7.  **Salve os Documentos:**
     *   Use o botão **"Copiar Texto"** para obter a classificação estruturada em formato de texto para colagem rápida em relatórios ou editais.
     *   Use o botão **"Exportar CSV"** para baixar a planilha editável do resultado.
-    *   Use o botão **"Imprimir Ata"** para abrir o assistente de impressão do navegador, gerando a ata física com cabeçalho oficial e seções para coleta de assinatura física das testemunhas e servidores.
+    *   Use o botão **"Imprimir Ata"** para abrir o assistente de impressão do navegador, gerando o documento da ata formatado no padrão oficial para salvamento em PDF e homologação eletrônica via SUAP.
 8.  **Divulgação Obrigatória:** Ao publicar o resultado final no portal institucional, **é obrigatório divulgar a semente numérica ou de texto gerada pelo sistema** junto com o link da aplicação. Isso assegura que qualquer cidadão possa comprovar a integridade e lisura do processo.
 
 ### Para Candidatos e Auditores: Como Auditar um Sorteio
@@ -99,10 +99,11 @@ Como a aplicação é construída com tecnologias web nativas sem necessidade de
 ## 📝 Log de Atualizações (Changelog)
 
 *   **13/07/2026 (Atual):**
+    *   Remoção do bloco de assinaturas físicas/manuais da ata de sorteio impressa, alinhando o documento para assinatura e homologação digital e eletrônica obrigatória via SUAP.
     *   Tratamento automático de vagas ociosas: quando o número de candidatos inscritos for inferior ao total de vagas ofertadas, a aplicação gera e exibe as vagas excedentes preenchidas como "Vaga a preencher ou remanejar" em todas as áreas (tela, ata de impressão oficial, exportação de ata em texto e arquivo CSV).
     *   Realce visual da semente de auditoria, tanto no painel do sistema (tamanho de fonte expandido, fonte mono, borda tracejada e cor de acento) quanto na ata de impressão oficial (bloco com borda preta fina, fundo cinza e texto ampliado para fácil leitura).
-    *   Correção de bug na folha de estilos de impressão (`@media print`) e HTML que impedia a exibição do resultado e do bloco de assinaturas oficiais de testemunhas e servidores na ata impressa.
-    *   Remoção do bloqueio que impedia sorteios com número de vagas maior que o número de inscritos (ex: 2 candidatos para 15 vagas), viabilizando certames com concorrência abaixo da oferta.
+    *   Correção de bug na folha de estilos de impressão (`@media print`) e HTML que impedia a exibição do resultado na ata impressa.
+    *   Remoção do bloco que impedia sorteios com número de vagas maior que o número de inscritos (ex: 2 candidatos para 15 vagas), viabilizando certames com concorrência abaixo da oferta.
     *   Ajuste e polimento de textos institucionais no cabeçalho e na seção informativa de auditoria pública.
     *   Assinatura de desenvolvimento institucional da DiCom (Diretoria de Comunicação - IF Baiano) inserida no rodapé.
     *   Remoção do arquivo legado `seedrandom.js` do IFSC.
