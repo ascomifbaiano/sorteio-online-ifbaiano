@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteio Eletrônico Oficial - IF Baiano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Barra de Acessibilidade -->
+  <div class="accessibility-bar" role="navigation" aria-label="Controles de Acessibilidade">
+    <span>Acessibilidade:</span>
+    <button class="accessibility-btn" onclick="adjustFontSize(0.1)" aria-label="Aumentar tamanho do texto">
+      A+
+    </button>
+    <button class="accessibility-btn" onclick="adjustFontSize(-0.1)" aria-label="Diminuir tamanho do texto">
+      A-
+    </button>
+    <button class="accessibility-btn" onclick="toggleHighContrast()" aria-label="Alternar Alto Contraste">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20v-20Z" fill="currentColor"></path>
+      </svg>
+      Alto Contraste
+    </button>
+  </div>
+
+  <div class="app-container">
+    <!-- Cabeçalho Principal -->
+    <header class="app-header">
+      <div class="logo-container">
+        <!-- Logo IF Baiano Horizontal -->
+        <img src="marca-if-baiano-horizontal.png" alt="Logotipo do IF Baiano" onerror="this.src='logo.jpg'; this.onerror=null;">
+      </div>
+      <div class="header-info">
+        <h1>Sorteio Eletrônico Público</h1>
+        <p>Plataforma oficial de sorteio de vagas e auditoria pública de sementes (seeds) do IF Baiano.</p>
+      </div>
+    </header>
+
+    <!-- Navegação por Abas -->
+    <nav class="tabs-nav" role="tablist">
+      <button class="tab-link active" role="tab" aria-selected="true" aria-controls="sorteio-panel" id="sorteio-tab" onclick="switchTab('sorteio')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
+          <line x1="15" y1="3" x2="15" y2="21"></line>
+          <line x1="3" y1="9" x2="21" y2="9"></line>
+          <line x1="3" y1="15" x2="21" y2="15"></line>
+        </svg>
+        Realizar Sorteio
+      </button>
+      <button class="tab-link" role="tab" aria-selected="false" aria-controls="auditoria-panel" id="auditoria-tab" onclick="switchTab('auditoria')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+          <path d="m9 12 2 2 4-4"></path>
+        </svg>
+        Auditar Sorteio (Transparência)
+      </button>
+    </nav>
+
+    <!-- ABA 1: REALIZAR SORTEIO -->
+    <main id="sorteio-panel" class="tab-content active" role="tabpanel" aria-labelledby="sorteio-tab">
+      <div class="dashboard-grid">
+        
+        <!-- Formulário de Configuração do Sorteio -->
+        <section class="card">
+          <h2 class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            Parâmetros do Sorteio
+          </h2>
+          
+          <form id="form-sorteio" onsubmit="event.preventDefault(); processaSorteio();">
+            <div class="form-group">
+              <label for="sort-curso">Nome do Curso / Edital / Certame</label>
+              <input type="text" id="sort-curso" placeholder="Ex: Curso Técnico em Informática - Edital 01/2026" required>
+            </div>
+
+            <div class="form-group">
+              <label>Modo de Entrada de Candidatos</label>
+              <div style="display: flex; gap: 20px; margin-top: 5px;">
+                <label class="checkbox-label">
+                  <input type="radio" name="modo-entrada" value="qtd" checked onclick="toggleModoEntrada('qtd')">
+                  Apenas Quantidade
+                </label>
+                <label class="checkbox-label">
+                  <input type="radio" name="modo-entrada" value="nomes" onclick="toggleModoEntrada('nomes')">
+                  Lista de Nomes / Inscrições
+                </label>
+              </div>
+            </div>
+
+            <!-- Entrada de Candidatos por Quantidade -->
+            <div class="form-group" id="grupo-sort-total">
+              <label for="sort-total">Total de Candidatos Inscritos</label>
+              <input type="number" id="sort-total" min="1" max="99999" placeholder="Ex: 150">
+              <span class="input-help">O sistema gerará números sequenciais de 1 a N.</span>
+            </div>
+
+            <!-- Entrada de Candidatos por Lista -->
+            <div class="form-group" id="grupo-sort-nomes" style="display: none;">
+              <label for="sort-nomes">Nomes ou Inscrições dos Candidatos (um por linha)</label>
+              <textarea id="sort-nomes" rows="8" placeholder="João Silva&#10;Maria Oliveira&#10;Carlos Santos"></textarea>
+              <span class="input-help">Cada linha será associada a um número para o sorteio.</span>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="sort-vagas">Número de Vagas</label>
+                <input type="number" id="sort-vagas" min="0" max="99999" placeholder="Ex: 40" required>
+                <span class="input-help">0 (zero) exibe todos na lista de espera.</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="sort-semente-input">Semente de Auditoria</label>
+                <input type="text" id="sort-semente-input" placeholder="Gerada automaticamente" disabled>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="sort-semente-manual" onclick="toggleSementeManual('sort')">
+                Definir semente manualmente (Auditoria/Reaplicação)
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              Realizar Sorteio Público
+            </button>
+          </form>
+        </section>
+
+        <!-- Resultados e Visualização da Ata de Sorteio -->
+        <section class="card" style="position: relative; min-height: 400px;">
+          <!-- Loader de Embaralhamento -->
+          <div id="sort-loader" class="loader-overlay">
+            <div class="spinner"></div>
+            <div class="loading-text" id="loader-text">Embaralhando candidatos...</div>
+            <div class="loading-subtext">Aplicando algoritmo determinístico IFBSort</div>
+          </div>
+
+          <h2 class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Resultado do Sorteio
+          </h2>
+
+          <div id="sort-empty-state" style="text-align: center; padding: 40px 20px; color: var(--text-light);">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; opacity: 0.5;">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <p>Preencha os parâmetros à esquerda e clique em <b>"Realizar Sorteio Público"</b> para visualizar os resultados.</p>
+          </div>
+
+          <div id="sort-results-wrapper" style="display: none;" class="print-visible">
+            <div class="result-header">
+              <div class="result-meta">
+                <h3 id="print-curso-titulo" style="font-size: 1.3rem; margin-bottom: 4px;">Curso Técnico</h3>
+                <p style="font-size: 0.85rem; color: var(--text-light);">
+                  Realizado em: <span id="res-data-hora">--/--/---- --:--:--</span>
+                </p>
+                <div style="margin-top: 8px;">
+                  <span class="badge badge-primary">Semente: <b id="res-semente">--</b></span>
+                  <span class="badge badge-success">Inscritos: <b id="res-inscritos">0</b></span>
+                  <span class="badge badge-warning">Vagas: <b id="res-vagas">0</b></span>
+                </div>
+              </div>
+              <div class="result-actions">
+                <button class="btn btn-outline btn-sm" onclick="copiarResultadoTexto()" title="Copiar lista completa em texto">
+                  Copiar Texto
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="exportarCSV()" title="Exportar tabela para Excel/CSV">
+                  Exportar CSV
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="window.print()" title="Imprimir Ata Oficial do Sorteio">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                  </svg>
+                  Imprimir Ata
+                </button>
+              </div>
+            </div>
+
+            <!-- Lista de Sorteados / Espera -->
+            <div class="sort-list" id="res-lista-sorteados" role="region" aria-label="Lista ordenada de candidatos sorteados">
+              <!-- Renderização dinâmica -->
+            </div>
+            
+            <!-- Campo de assinaturas para a Ata Impressa -->
+            <div class="print-signatures" style="display: none;">
+              <div>
+                <div class="signature-line">Assinatura da Testemunha 1</div>
+                <div style="text-align: center; font-size: 8pt; color: #555;">Nome/CPF: _______________________</div>
+              </div>
+              <div>
+                <div class="signature-line">Assinatura da Testemunha 2</div>
+                <div style="text-align: center; font-size: 8pt; color: #555;">Nome/CPF: _______________________</div>
+              </div>
+              <div style="grid-column: span 2;">
+                <div class="signature-line" style="max-width: 400px; margin: 40px auto 0 auto;">Assinatura do Servidor Responsável</div>
+                <div style="text-align: center; font-size: 8pt; color: #555;">Cargo/Siape: _______________________</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ABA 2: AUDITAR SORTEIO -->
+    <main id="auditoria-panel" class="tab-content" role="tabpanel" aria-labelledby="auditoria-tab">
+      <div class="dashboard-grid">
+        
+        <!-- Formulário de Auditoria -->
+        <section class="card">
+          <h2 class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+            Parâmetros de Auditoria
+          </h2>
+          
+          <form id="form-auditoria" onsubmit="event.preventDefault(); processaAuditoria();">
+            <div class="alert alert-info">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <div>
+                <b>O que é Auditoria?</b> Qualquer sorteio eletrônico oficial do IF Baiano publica sua <b>Semente (Seed)</b> ao final. Informando a mesma semente, o mesmo número de candidatos e a mesma quantidade de vagas, o sistema gerará <b>exatamente o mesmo resultado</b> por meio do algoritmo matemático próprio **IFBSort**.
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 10px;">
+              <label for="aud-semente">Semente (Seed) Publicada</label>
+              <input type="text" id="aud-semente" placeholder="Ex: 1783948576102" required>
+              <span class="input-help">O código de 13 dígitos numéricos ou string fornecido na ata do sorteio.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="aud-total">Total de Candidatos Inscritos</label>
+              <input type="number" id="aud-total" min="1" max="99999" placeholder="Ex: 150" required>
+            </div>
+
+            <div class="form-group">
+              <label for="aud-vagas">Número de Vagas</label>
+              <input type="number" id="aud-vagas" min="0" max="99999" placeholder="Ex: 40" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              Gerar Lista de Auditoria
+            </button>
+          </form>
+        </section>
+
+        <!-- Resultados e Confronto da Auditoria -->
+        <section class="card" style="position: relative; min-height: 400px;">
+          <!-- Loader de Auditoria -->
+          <div id="aud-loader" class="loader-overlay">
+            <div class="spinner"></div>
+            <div class="loading-text">Reconstruindo sorteio...</div>
+            <div class="loading-subtext">Aplicando motor matemático IFBSort</div>
+          </div>
+
+          <h2 class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+            Lista de Auditoria Gerada
+          </h2>
+
+          <div id="aud-empty-state" style="text-align: center; padding: 40px 20px; color: var(--text-light);">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; opacity: 0.5;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <p>Preencha os parâmetros à esquerda e clique em <b>"Gerar Lista de Auditoria"</b> para iniciar a auditoria pública.</p>
+          </div>
+
+          <div id="aud-results-wrapper" style="display: none;">
+            <!-- Painel de Confronto Rápido -->
+            <div class="audit-compare-box">
+              <label for="aud-compare-input" style="font-size: 0.95rem; color: var(--primary-color);">
+                <b>Confrontar com o Resultado Publicado</b>
+              </label>
+              <textarea id="aud-compare-input" rows="3" placeholder="Cole aqui a sequência de números ou nomes do resultado oficial (separados por espaço, vírgula ou linha) para validação automática." oninput="confrontaResultados()"></textarea>
+              <div id="aud-compare-status">
+                <!-- Status do Confronto (Sucesso / Erro / Aviso) -->
+              </div>
+            </div>
+
+            <div class="result-header" style="margin-top: 20px;">
+              <div class="result-meta">
+                <h3>Lista Auditada</h3>
+                <div style="margin-top: 8px;">
+                  <span class="badge badge-primary">Semente: <b id="aud-res-semente">--</b></span>
+                  <span class="badge badge-success">Inscritos: <b id="aud-res-inscritos">0</b></span>
+                  <span class="badge badge-warning">Vagas: <b id="aud-res-vagas">0</b></span>
+                </div>
+              </div>
+              <div class="result-actions">
+                <button class="btn btn-outline btn-sm" onclick="copiarAuditoriaTexto()">
+                  Copiar Texto
+                </button>
+              </div>
+            </div>
+
+            <!-- Lista de Sorteados Auditados -->
+            <div class="sort-list" id="aud-lista-sorteados">
+              <!-- Renderização dinâmica -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+      <p>© 2026 Instituto Federal de Educação, Ciência e Tecnologia Baiano - IF Baiano</p>
+      <p style="font-size: 0.75rem; margin-top: 5px; opacity: 0.8;">
+        Algoritmo de Sorteio Eletrônico IFBSort: LCG de Park-Miller de 32-bits e Embaralhamento Fisher-Yates integrado.
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // Gerador Congruente Linear (LCG) de Park-Miller de 32-bits
+    class IFBaianoPRNG {
+      constructor(seed) {
+        // Converte a semente (número ou string) em um valor numérico de 32 bits
+        this.state = typeof seed === 'number' ? seed : this.hashString(seed);
+        // O estado inicial do LCG de Park-Miller deve ser positivo e diferente de zero
+        this.state = Math.abs(this.state) % 2147483647;
+        if (this.state <= 0) this.state = 1;
+      }
+
+      // Função de hash DJB2 modificada para converter strings de semente em inteiros consistentes
+      hashString(str) {
+        let hash = 5381;
+        for (let i = 0; i < str.length; i++) {
+          hash = ((hash << 5) + hash) + str.charCodeAt(i);
+          hash = hash & hash; // Converte para inteiro de 32 bits assinado
+        }
+        return hash;
+      }
+
+      // Retorna o próximo valor pseudo-aleatório entre 0 (inclusivo) e 1 (exclusivo)
+      next() {
+        // Constantes padrões do LCG Park-Miller (MINSTD)
+        const a = 48271;
+        const m = 2147483647; // 2^31 - 1 (primo de Mersenne)
+        this.state = (this.state * a) % m;
+        return (this.state - 1) / (m - 1);
+      }
+    }
+
+    // Algoritmo de Embaralhamento Moderno de Fisher-Yates (Knuth) do IF Baiano
+    function embaralharIFBaiano(candidatos, semente) {
+      const prng = new IFBaianoPRNG(semente);
+      const resultado = [...candidatos];
+      
+      for (let i = resultado.length - 1; i > 0; i--) {
+        // Sorteia uma posição determinística de 0 a i
+        const j = Math.floor(prng.next() * (i + 1));
+        // Permuta os candidatos
+        const temp = resultado[i];
+        resultado[i] = resultado[j];
+        resultado[j] = temp;
+      }
+      return resultado;
+    }
+
+    // Configurações Globais e de Acessibilidade
+    let currentZoom = 1.0;
+    
+    function adjustFontSize(amount) {
+      currentZoom += amount;
+      if (currentZoom < 0.8) currentZoom = 0.8;
+      if (currentZoom > 1.6) currentZoom = 1.6;
+      document.documentElement.style.setProperty('--font-scale', currentZoom + 'rem');
+    }
+
+    function toggleHighContrast() {
+      document.body.classList.toggle('high-contrast');
+      const isHc = document.body.classList.contains('high-contrast');
+      localStorage.setItem('high-contrast', isHc ? '1' : '0');
+    }
+
+    // Carregar configurações locais salvas
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('high-contrast') === '1') {
+        document.body.classList.add('high-contrast');
+      }
+    });
+
+    // Alternância de Abas (Tabs)
+    function switchTab(tabName) {
+      const tabs = ['sorteio', 'auditoria'];
+      tabs.forEach(t => {
+        const link = document.getElementById(`${t}-tab`);
+        const panel = document.getElementById(`${t}-panel`);
+        if (t === tabName) {
+          link.classList.add('active');
+          link.setAttribute('aria-selected', 'true');
+          panel.classList.add('active');
+        } else {
+          link.classList.remove('active');
+          link.setAttribute('aria-selected', 'false');
+          panel.classList.remove('active');
+        }
+      });
+    }
+
+    // Gerencia Semente Manual
+    function toggleSementeManual(prefix) {
+      const checkbox = document.getElementById(`${prefix}-semente-manual`);
+      const input = document.getElementById(`${prefix}-semente-input`);
+      if (checkbox.checked) {
+        input.disabled = false;
+        input.required = true;
+        input.placeholder = "Semente personalizada";
+        input.focus();
+      } else {
+        input.disabled = true;
+        input.required = false;
+        input.value = "";
+        input.placeholder = "Gerada automaticamente";
+      }
+    }
+
+    // Alternar Modo de Entrada (Qtd vs Nomes)
+    function toggleModoEntrada(modo) {
+      const grupoTotal = document.getElementById('grupo-sort-total');
+      const grupoNomes = document.getElementById('grupo-sort-nomes');
+      const inputTotal = document.getElementById('sort-total');
+      const inputNomes = document.getElementById('sort-nomes');
+
+      if (modo === 'qtd') {
+        grupoTotal.style.display = 'flex';
+        grupoNomes.style.display = 'none';
+        inputTotal.required = true;
+        inputNomes.required = false;
+      } else {
+        grupoTotal.style.display = 'none';
+        grupoNomes.style.display = 'flex';
+        inputTotal.required = false;
+        inputNomes.required = true;
+      }
+    }
+
+    // Variáveis locais para armazenar resultados de sorteios atuais
+    let sorteioAtual = {
+      curso: "",
+      semente: 0,
+      totalInscritos: 0,
+      vagas: 0,
+      dataHora: "",
+      listaNumeros: [], // Guarda a ordem dos números originais embaralhados
+      listaCandidatos: [] // Array de {numeroOriginal, nome}
+    };
+
+    let auditoriaAtual = {
+      semente: 0,
+      totalInscritos: 0,
+      vagas: 0,
+      listaNumeros: []
+    };
+
+    // Executa a lógica de sorteio
+    function processaSorteio() {
+      const loader = document.getElementById('sort-loader');
+      const loaderText = document.getElementById('loader-text');
+      const emptyState = document.getElementById('sort-empty-state');
+      const resultsWrapper = document.getElementById('sort-results-wrapper');
+      
+      // Mostrar carregador
+      loader.classList.add('active');
+      emptyState.style.display = 'none';
+      resultsWrapper.style.display = 'none';
+      
+      // Capturar inputs
+      const curso = document.getElementById('sort-curso').value;
+      const modoEntrada = document.querySelector('input[name="modo-entrada"]:checked').value;
+      const vagas = parseInt(document.getElementById('sort-vagas').value, 10);
+      
+      let candidatos = [];
+      let total = 0;
+      
+      if (modoEntrada === 'qtd') {
+        total = parseInt(document.getElementById('sort-total').value, 10);
+        for (let i = 1; i <= total; i++) {
+          candidatos.push({ numeroOriginal: i, nome: `Candidato ${i}` });
+        }
+      } else {
+        const nomesText = document.getElementById('sort-nomes').value;
+        const linhas = nomesText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        total = linhas.length;
+        if (total === 0) {
+          alert("Por favor, insira pelo menos um nome de candidato.");
+          loader.classList.remove('active');
+          emptyState.style.display = 'block';
+          return;
+        }
+        candidatos = linhas.map((nome, index) => ({
+          numeroOriginal: index + 1,
+          nome: nome
+        }));
+      }
+
+      if (vagas > total) {
+        alert("O número de vagas não pode ser maior que o número total de candidatos.");
+        loader.classList.remove('active');
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      // Semente
+      let semente;
+      const sementeManualCheck = document.getElementById('sort-semente-manual').checked;
+      const sementeManualInput = document.getElementById('sort-semente-input').value.trim();
+      
+      if (sementeManualCheck && sementeManualInput !== "") {
+        const sementeNum = parseInt(sementeManualInput, 10);
+        semente = isNaN(sementeNum) ? sementeManualInput : sementeNum;
+      } else {
+        semente = Date.now(); // 13 dígitos
+      }
+
+      // Simular etapas de sorteio na tela (animação amigável)
+      setTimeout(() => {
+        loaderText.textContent = "Semeando gerador congruente linear (LCG)...";
+        
+        setTimeout(() => {
+          loaderText.textContent = "Aplicando Knuth-Shuffle para " + total + " elementos...";
+          
+          setTimeout(() => {
+            // Executa o embaralhamento na lista de objetos de candidatos
+            const candidatosEmbaralhados = embaralharIFBaiano(candidatos, semente);
+            
+            // Grava os dados globais do sorteio realizado
+            sorteioAtual.curso = curso;
+            sorteioAtual.semente = semente;
+            sorteioAtual.totalInscritos = total;
+            sorteioAtual.vagas = vagas;
+            
+            const agora = new Date();
+            sorteioAtual.dataHora = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+            
+            // Guarda a correspondência da lista numérica final sorteada (dos números originais)
+            sorteioAtual.listaNumeros = candidatosEmbaralhados.map(c => c.numeroOriginal);
+            sorteioAtual.listaCandidatos = candidatosEmbaralhados;
+
+            // Renderizar resultados
+            renderizarSorteio();
+
+            // Esconder loader
+            loader.classList.remove('active');
+            resultsWrapper.style.display = 'block';
+            
+          }, 600);
+        }, 600);
+      }, 500);
+    }
+
+    // Renderiza a lista de sorteados na tela
+    function renderizarSorteio() {
+      document.getElementById('print-curso-titulo').textContent = sorteioAtual.curso;
+      document.getElementById('res-data-hora').textContent = sorteioAtual.dataHora;
+      document.getElementById('res-semente').textContent = sorteioAtual.semente;
+      document.getElementById('res-inscritos').textContent = sorteioAtual.totalInscritos;
+      document.getElementById('res-vagas').textContent = sorteioAtual.vagas;
+
+      const container = document.getElementById('res-lista-sorteados');
+      container.innerHTML = "";
+
+      const total = sorteioAtual.totalInscritos;
+      const vagas = sorteioAtual.vagas;
+      const listaSorteada = sorteioAtual.listaCandidatos;
+
+      // Primeiro criamos as chamadas da Primeira Chamada (Selecionados)
+      if (vagas > 0) {
+        const divisoriaSelecionados = document.createElement('h4');
+        divisoriaSelecionados.style.margin = '15px 0 10px 0';
+        divisoriaSelecionados.style.color = 'var(--color-success)';
+        divisoriaSelecionados.innerHTML = `Selecionados (Vagas Regulares - 1ª Chamada)`;
+        container.appendChild(divisoriaSelecionados);
+      }
+
+      for (let i = 0; i < total; i++) {
+        // Se ultrapassou o número de vagas, renderiza separador de Lista de Espera
+        if (i === vagas && vagas > 0) {
+          const divisoriaEspera = document.createElement('h4');
+          divisoriaEspera.style.margin = '25px 0 10px 0';
+          divisoriaEspera.style.color = 'var(--color-warning)';
+          divisoriaEspera.innerHTML = `Lista de Espera`;
+          container.appendChild(divisoriaEspera);
+        }
+
+        const candidato = listaSorteada[i];
+        const item = document.createElement('div');
+        item.className = `sort-item ${i < vagas ? 'selected' : 'waiting'}`;
+        
+        // Formato: Posição | Nome | Número de Inscrição
+        item.innerHTML = `
+          <span class="sort-position">${i + 1}º</span>
+          <span class="sort-name">${candidato.nome}</span>
+          <span class="sort-number">nº ${candidato.numeroOriginal}</span>
+        `;
+        
+        container.appendChild(item);
+      }
+    }
+
+    // Exportar Resultados como Texto
+    function copiarResultadoTexto() {
+      if (!sorteioAtual.listaCandidatos.length) return;
+      
+      let txt = `ATA OFICIAL DO SORTEIO PÚBLICO\n`;
+      txt += `Curso/Certame: ${sorteioAtual.curso}\n`;
+      txt += `Data/Hora: ${sorteioAtual.dataHora}\n`;
+      txt += `Semente Oficial (Seed): ${sorteioAtual.semente}\n`;
+      txt += `Total de Candidatos: ${sorteioAtual.totalInscritos}\n`;
+      txt += `Total de Vagas: ${sorteioAtual.vagas}\n`;
+      txt += `Algoritmo Utilizado: IFBSort (LCG/Fisher-Yates)\n`;
+      txt += `========================================\n\n`;
+      
+      txt += `CLASSIFICAÇÃO DOS CANDIDATOS:\n`;
+      sorteioAtual.listaCandidatos.forEach((candidato, index) => {
+        const status = index < sorteioAtual.vagas ? 'SELECIONADO (VAGA REGULAR)' : 'LISTA DE ESPERA';
+        txt += `${index + 1}º - ${candidato.nome} (Inscrição: ${candidato.numeroOriginal}) - [${status}]\n`;
+      });
+      
+      navigator.clipboard.writeText(txt).then(() => {
+        alert("Ata copiada para a área de transferência com sucesso!");
+      }).catch(err => {
+        alert("Erro ao copiar: " + err);
+      });
+    }
+
+    // Exportar para CSV (Excel)
+    function exportarCSV() {
+      if (!sorteioAtual.listaCandidatos.length) return;
+      
+      let csv = "\uFEFF"; // BOM para o Excel
+      csv += "Classificacao;Nome;NumeroInscricao;Status\n";
+      
+      sorteioAtual.listaCandidatos.forEach((candidato, index) => {
+        const status = index < sorteioAtual.vagas ? 'Selecionado' : 'Lista de Espera';
+        csv += `${index + 1};"${candidato.nome.replace(/"/g, '""')}";${candidato.numeroOriginal};${status}\n`;
+      });
+      
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `sorteio_ifbaiano_${sorteioAtual.semente}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Lógica da Auditoria
+    function processaAuditoria() {
+      const loader = document.getElementById('aud-loader');
+      const emptyState = document.getElementById('aud-empty-state');
+      const resultsWrapper = document.getElementById('aud-results-wrapper');
+      
+      loader.classList.add('active');
+      emptyState.style.display = 'none';
+      resultsWrapper.style.display = 'none';
+
+      // Parâmetros
+      const sementeInput = document.getElementById('aud-semente').value.trim();
+      const total = parseInt(document.getElementById('aud-total').value, 10);
+      const vagas = parseInt(document.getElementById('aud-vagas').value, 10);
+
+      // Semente
+      const sementeNum = parseInt(sementeInput, 10);
+      const semente = isNaN(sementeNum) ? sementeInput : sementeNum;
+
+      setTimeout(() => {
+        // Na auditoria, criamos um vetor de números de 1 a N
+        const candidatosNumeros = [];
+        for (let i = 1; i <= total; i++) {
+          candidatosNumeros.push(i);
+        }
+
+        // Executa o embaralhamento
+        const listaOrdenada = embaralharIFBaiano(candidatosNumeros, semente);
+        
+        auditoriaAtual.semente = semente;
+        auditoriaAtual.totalInscritos = total;
+        auditoriaAtual.vagas = vagas;
+        auditoriaAtual.listaNumeros = listaOrdenada;
+
+        // Renderiza
+        renderizarAuditoria();
+
+        loader.classList.remove('active');
+        resultsWrapper.style.display = 'block';
+        
+        // Zera o campo de confronto anterior
+        document.getElementById('aud-compare-input').value = "";
+        document.getElementById('aud-compare-status').innerHTML = "";
+      }, 800);
+    }
+
+    function renderizarAuditoria() {
+      document.getElementById('aud-res-semente').textContent = auditoriaAtual.semente;
+      document.getElementById('aud-res-inscritos').textContent = auditoriaAtual.totalInscritos;
+      document.getElementById('aud-res-vagas').textContent = auditoriaAtual.vagas;
+
+      const container = document.getElementById('aud-lista-sorteados');
+      container.innerHTML = "";
+
+      const total = auditoriaAtual.totalInscritos;
+      const vagas = auditoriaAtual.vagas;
+      const ordens = auditoriaAtual.listaNumeros;
+
+      if (vagas > 0) {
+        const divSel = document.createElement('h4');
+        divSel.style.margin = '15px 0 10px 0';
+        divSel.style.color = 'var(--color-success)';
+        divSel.innerHTML = `Vagas Regulares (Primeira Chamada)`;
+        container.appendChild(divSel);
+      }
+
+      for (let i = 0; i < total; i++) {
+        if (i === vagas && vagas > 0) {
+          const divEsp = document.createElement('h4');
+          divEsp.style.margin = '25px 0 10px 0';
+          divEsp.style.color = 'var(--color-warning)';
+          divEsp.innerHTML = `Lista de Espera`;
+          container.appendChild(divEsp);
+        }
+
+        const candidatoNumOriginal = ordens[i];
+        const item = document.createElement('div');
+        item.className = `sort-item ${i < vagas ? 'selected' : 'waiting'}`;
+        item.id = `aud-item-pos-${i}`;
+        
+        item.innerHTML = `
+          <span class="sort-position">${i + 1}º</span>
+          <span class="sort-name">Candidato nº ${candidatoNumOriginal}</span>
+          <span class="sort-number">nº ${candidatoNumOriginal}</span>
+        `;
+        container.appendChild(item);
+      }
+    }
+
+    function copiarAuditoriaTexto() {
+      if (!auditoriaAtual.listaNumeros.length) return;
+      
+      let txt = `RESULTADO DE AUDITORIA PÚBLICA (ALGORITMO IFBSORT)\n`;
+      txt += `Semente (Seed): ${auditoriaAtual.semente}\n`;
+      txt += `Total de Candidatos: ${auditoriaAtual.totalInscritos}\n`;
+      txt += `Total de Vagas: ${auditoriaAtual.vagas}\n`;
+      txt += `========================================\n\n`;
+      
+      auditoriaAtual.listaNumeros.forEach((numOriginal, index) => {
+        const status = index < auditoriaAtual.vagas ? 'SELECIONADO' : 'LISTA DE ESPERA';
+        txt += `${index + 1}º colocado: Candidato número ${numOriginal} [${status}]\n`;
+      });
+      
+      navigator.clipboard.writeText(txt).then(() => {
+        alert("Lista de auditoria copiada!");
+      });
+    }
+
+    // Função de Confronto / Validação Automática de Auditoria
+    function confrontaResultados() {
+      const inputText = document.getElementById('aud-compare-input').value;
+      const statusContainer = document.getElementById('aud-compare-status');
+      
+      if (inputText.trim() === "") {
+        statusContainer.innerHTML = "";
+        // Limpar destaques
+        for (let i = 0; i < auditoriaAtual.totalInscritos; i++) {
+          const el = document.getElementById(`aud-item-pos-${i}`);
+          if (el) {
+            el.style.border = "";
+            el.style.backgroundColor = "";
+          }
+        }
+        return;
+      }
+
+      // Filtra e isola apenas os inteiros digitados ou colados
+      const numerosInseridos = [];
+      const tokens = inputText.split(/[\s,;\n]+/);
+      
+      tokens.forEach(t => {
+        const match = t.match(/\b\d+\b/);
+        if (match) {
+          numerosInseridos.push(parseInt(match[0], 10));
+        }
+      });
+
+      if (numerosInseridos.length === 0) {
+        statusContainer.innerHTML = `
+          <div class="alert alert-warning" style="margin-top: 10px; border-left-width:4px;">
+            Nenhum número legível foi identificado na área colada. Certifique-se de copiar a coluna de números sorteados.
+          </div>
+        `;
+        return;
+      }
+
+      const auditoriaList = auditoriaAtual.listaNumeros;
+      let erros = 0;
+      let acertos = 0;
+      
+      // Limpa os estilos
+      for (let i = 0; i < auditoriaList.length; i++) {
+        const el = document.getElementById(`aud-item-pos-${i}`);
+        if (el) {
+          el.style.border = "";
+          el.style.backgroundColor = "";
+        }
+      }
+
+      // Compara posições
+      const tamanhoConfronto = Math.min(auditoriaList.length, numerosInseridos.length);
+      for (let i = 0; i < tamanhoConfronto; i++) {
+        const el = document.getElementById(`aud-item-pos-${i}`);
+        if (auditoriaList[i] === numerosInseridos[i]) {
+          acertos++;
+          if (el) {
+            el.style.border = "2px solid #2E7D32";
+            el.style.backgroundColor = "rgba(46, 125, 50, 0.15)";
+          }
+        } else {
+          erros++;
+          if (el) {
+            el.style.border = "2px solid #C80710";
+            el.style.backgroundColor = "rgba(200, 7, 16, 0.15)";
+          }
+        }
+      }
+
+      const totalFaltando = auditoriaList.length - numerosInseridos.length;
+
+      if (erros === 0 && totalFaltando === 0) {
+        statusContainer.innerHTML = `
+          <div class="alert alert-success" style="margin-top: 10px; border-left-width:4px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <div>
+              <b>CONFRONTO BATEU 100%!</b><br/>
+              A lista inserida coincide perfeitamente com a auditoria oficial gerada pelo motor <b>IFBSort</b> para a semente <b>${auditoriaAtual.semente}</b>.
+            </div>
+          </div>
+        `;
+      } else if (erros > 0) {
+        statusContainer.innerHTML = `
+          <div class="alert alert-warning" style="margin-top: 10px; border-left-width:4px; color: #C80710; background-color: rgba(200, 7, 16, 0.05); border-left-color: #C80710;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div>
+              <b>DIVERGÊNCIA ENCONTRADA!</b><br/>
+              Foram detectadas <b>${erros} divergências</b> de classificação. As posições divergentes estão assinaladas em vermelho na lista.
+            </div>
+          </div>
+        `;
+      } else if (totalFaltando > 0) {
+        statusContainer.innerHTML = `
+          <div class="alert alert-info" style="margin-top: 10px; border-left-width:4px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div>
+              <b>LISTA PARCIALMENTE CONFRONTADA</b><br/>
+              Os primeiros ${acertos} classificados batem perfeitamente. Faltam <b>${totalFaltando}</b> candidatos para completar a lista auditada total de ${auditoriaList.length}.
+            </div>
+          </div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
