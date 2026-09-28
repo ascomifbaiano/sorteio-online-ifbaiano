@@ -25,8 +25,6 @@
   --color-warning-bg: #FFF3E0;
   --color-info: #1565C0;
   --color-info-bg: #E3F2FD;
-  --color-danger: #C80710;
-  --color-danger-bg: #FDECEC;
 }
 
 /* Modo Alto Contraste */
@@ -48,8 +46,6 @@ body.high-contrast {
   --color-warning-bg: #222200;
   --color-info: #00FFFF;
   --color-info-bg: #000022;
-  --color-danger: #FF3333;
-  --color-danger-bg: #220000;
 }
 
 * {
@@ -383,31 +379,25 @@ textarea:disabled {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  border: 1px solid transparent;
+  border-left: 4px solid transparent;
 }
 
 .alert-info {
   background-color: var(--color-info-bg);
   color: var(--color-info);
-  border-color: var(--color-info);
+  border-left-color: var(--color-info);
 }
 
 .alert-success {
   background-color: var(--color-success-bg);
   color: var(--color-success);
-  border-color: var(--color-success);
+  border-left-color: var(--color-success);
 }
 
 .alert-warning {
   background-color: var(--color-warning-bg);
   color: var(--color-warning);
-  border-color: var(--color-warning);
-}
-
-.alert-danger {
-  background-color: var(--color-danger-bg);
-  color: var(--color-danger);
-  border-color: var(--color-danger);
+  border-left-color: var(--color-warning);
 }
 
 /* Área de Resultados */

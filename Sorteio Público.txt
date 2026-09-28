@@ -1,0 +1,50 @@
+Sorteio Público
+Saiba como é realizado o sorteio de vagas para os cursos do IFSC
+O processo seletivo para alguns cursos do IFSC é feito por meio de um sorteio público de forma eletrônica. O sorteio é realizado por servidor designado pela chefia do Departamento de Ingresso, não sendo obrigatória a presença dos candidatos.
+
+Regras do sorteio eletrônico
+Conforme edital, após o encerramento do prazo de inscrições, é divulgada a lista dos candidatos inscritos. Essa listagem contém uma coluna chamada “número para sorteio”, onde cada candidato recebe um número. Esses números são sorteados aleatoriamente, independentemente do número de vagas disponíveis. A partir deste sorteio aleatório de números é que a classificação dos candidatos é feita e o resultado é processado e publicado.
+
+Funcionamento do Sistema de sorteio eletrônico
+
+O sistema sorteia aleatoriamente a ordem dos números a partir de uma “semente” que o dispara. Essa semente garante a aleatoriedade do processo e permite, inclusive, a reprodução de um sorteio já realizado com obtenção de um resultado idêntico. Com isso, a semente gerada a cada sorteio pode ser utilizada para fins de auditoria.
+
+Sobre a semente utilizada no sorteio eletrônico
+
+A semente é um número pseudo-aleatório, composto por uma sequência de 13 algarismos, baseado na Hora UNIX (referência numérica amplamente utilizada em sistemas operacionais, definida como a quantidade de segundos passados desde 01/01/1970 UTC até o momento atual). Assim, cada vez que se clica no botão para realizar o sorteio, uma lista diferente é gerada, sendo o tempo contado a partir da Hora UNIX o fator que torna a lista pseudo-aleatória em lista realmente aleatória.
+
+Como auditar o sorteio eletrônico
+
+É possível verificar a autenticidade do sorteio eletrônico realizado utilizando a semente publicada após cada sorteio. Para isso, o IFSC disponibiliza para download uma versão de auditoria do sistema de sorteio eletrônico.
+
+ATENÇÃO: Verifique no edital, na seção “Seleção dos candidatos”, qual o sistema utilizado no seu processo seletivo.
+
+Siga os passos abaixo para replicar um sorteio.
+
+Passo-a-passo para sorteios realizados no Sistema de Ingresso:
+
+1) Faça o download do programa utilizado para realização do sorteio eletrônico (Requisitos: navegadores Firefox ou Chrome - não funciona em navegadores Internet Explorer);
+
+2) Descompacte a pasta do download com o auxílio de um programa de compactação de arquivos (ex: 7-Zip, WinZip, WinRAR, PeaZip);
+
+3) Na pasta descompactada, abra o programa “sorteio auditoria”;
+
+4) Insira o número total de candidatos inscritos no processo seletivo, publicado antes do sorteio, e o número 0 (zero) para a quantidade de vagas;
+
+5) Marque a opção "Inserir semente manualmente" e coloque a semente do sorteio a ser auditado, conforme publicado após o sorteio;
+
+6) Clique no botão "Gerar Lista";
+
+7) Efetue a comparação da saída do programa com a lista publicada após o sorteio.
+
+Passo-a-passo para sorteios realizados no SIGCertame:
+
+1) Faça o download do programa utilizado para realização do sorteio eletrônico (Requisito: Java instalado no dispositivo - https://www.java.com/pt-BR/download/manual.jsp);
+
+2) Insira a quantidade de candidatos inscritos no curso, de acordo com o publicado antes do sorteio;
+
+3) Digite a semente do sorteio a ser auditado, conforme publicado após o sorteio;
+
+4) Clique no botão "Gerar Lista";
+
+5) Efetue a comparação da saída do programa com a lista publicada após o sorteio.

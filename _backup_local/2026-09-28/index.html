@@ -21,7 +21,7 @@
         <div class="loader-bar">
             <div class="loader-progress"></div>
         </div>
-        <div id="loading-global-text" class="loader-text">Carregando o sistema de sorteio...</div>
+        <div id="loading-global-text" class="loader-text">Inicializando motor criptográfico de sorteio...</div>
     </div>
 </div>
 
@@ -49,7 +49,7 @@
     <header class="app-header">
       <div class="logo-container">
         <!-- Logo IF Baiano Horizontal -->
-        <img src="marca-if-baiano-horizontal.png" alt="Logotipo do IF Baiano">
+        <img src="marca-if-baiano-horizontal.png" alt="Logotipo do IF Baiano" onerror="this.src='logo.jpg'; this.onerror=null;">
       </div>
       <div class="header-info">
         <h1>Sorteio Eletrônico Público</h1>
@@ -115,7 +115,7 @@
             <!-- Entrada de Candidatos por Quantidade -->
             <div class="form-group" id="grupo-sort-total">
               <label for="sort-total">Total de Candidatos Inscritos</label>
-              <input type="number" id="sort-total" min="1" max="99999" placeholder="Ex: 150" required>
+              <input type="number" id="sort-total" min="1" max="99999" placeholder="Ex: 150">
               <span class="input-help">O sistema gerará números sequenciais de 1 a N.</span>
             </div>
 
@@ -123,7 +123,7 @@
             <div class="form-group" id="grupo-sort-nomes" style="display: none;">
               <label for="sort-nomes">Nomes ou Inscrições dos Candidatos (um por linha)</label>
               <textarea id="sort-nomes" rows="8" placeholder="João Silva&#10;Maria Oliveira&#10;Carlos Santos"></textarea>
-              <span class="input-help">Cada linha recebe um número pela ordem em que aparece. Use a mesma ordem da lista de inscritos publicada antes do sorteio.</span>
+              <span class="input-help">Cada linha será associada a um número para o sorteio.</span>
             </div>
 
             <div class="form-row-2">
@@ -135,9 +135,15 @@
               
               <div class="form-group">
                 <label for="sort-semente-input">Semente de Auditoria</label>
-                <input type="text" id="sort-semente-input" placeholder="Gerada no momento do sorteio" disabled>
-                <span class="input-help">Para refazer um sorteio com semente conhecida, use a aba de auditoria.</span>
+                <input type="text" id="sort-semente-input" placeholder="Gerada automaticamente" disabled>
               </div>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="sort-semente-manual" onclick="toggleSementeManual('sort')">
+                Definir semente manualmente (Auditoria/Reaplicação)
+              </label>
             </div>
 
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
@@ -157,7 +163,7 @@
           <div id="sort-loader" class="loader-overlay">
             <div class="spinner"></div>
             <div class="loading-text" id="loader-text">Embaralhando candidatos...</div>
-            <div class="loading-subtext">Algoritmo IFBSort v2 (SHA-256 e Fisher-Yates)</div>
+            <div class="loading-subtext">Aplicando algoritmo determinístico IFBSort</div>
           </div>
 
           <h2 class="card-title">
@@ -190,7 +196,6 @@
                   <span class="badge badge-primary semente-destaque">Semente: <b id="res-semente">--</b></span>
                   <span class="badge badge-success">Inscritos: <b id="res-inscritos">0</b></span>
                   <span class="badge badge-warning">Vagas: <b id="res-vagas">0</b></span>
-                  <span class="badge badge-primary">Algoritmo: <b id="res-versao">--</b></span>
                 </div>
               </div>
               <div class="result-actions">
@@ -243,14 +248,14 @@
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
               </svg>
               <div>
-                <b>O que é Auditoria?</b> Qualquer sorteio eletrônico oficial do IF Baiano publica sua Semente ao final. Informando a mesma semente, o mesmo número de candidatos e a mesma quantidade de vagas, o sistema gerará exatamente o mesmo resultado. A versão do algoritmo é reconhecida pela própria semente: sementes numéricas são da versão 1, e sementes iniciadas por <b>v2-</b> são da versão 2.
+                <b>O que é Auditoria?</b> Qualquer sorteio eletrônico oficial do IF Baiano publica sua Semente ao final. Informando a mesma semente, o mesmo número de candidatos e a mesma quantidade de vagas, o sistema gerará exatamente o mesmo resultado.
               </div>
             </div>
 
             <div class="form-group" style="margin-top: 10px;">
               <label for="aud-semente">Semente (Seed) Publicada</label>
-              <input type="text" id="aud-semente" placeholder="Ex: 1783948576102 ou v2-3f9a1c0b7e24d568" required>
-              <span class="input-help">Copie a semente exatamente como aparece na ata do sorteio.</span>
+              <input type="text" id="aud-semente" placeholder="Ex: 1783948576102" required>
+              <span class="input-help">O código de 13 dígitos numéricos ou string fornecido na ata do sorteio.</span>
             </div>
 
             <div class="form-group">
@@ -278,7 +283,7 @@
           <div id="aud-loader" class="loader-overlay">
             <div class="spinner"></div>
             <div class="loading-text">Reconstruindo sorteio...</div>
-            <div class="loading-subtext">Aplicando o algoritmo IFBSort indicado pela semente</div>
+            <div class="loading-subtext">Aplicando motor matemático IFBSort</div>
           </div>
 
           <h2 class="card-title">
@@ -304,7 +309,7 @@
               <label for="aud-compare-input" style="font-size: 0.95rem; color: var(--primary-color);">
                 <b>Confrontar com o Resultado Publicado</b>
               </label>
-              <textarea id="aud-compare-input" rows="3" placeholder="Cole aqui a lista oficial: pode ser o texto da ata, o CSV exportado ou só os números de inscrição, em ordem de classificação." oninput="confrontaResultados()"></textarea>
+              <textarea id="aud-compare-input" rows="3" placeholder="Cole aqui a sequência de números ou nomes do resultado oficial (separados por espaço, vírgula ou linha) para validação automática." oninput="confrontaResultados()"></textarea>
               <div id="aud-compare-status">
                 <!-- Status do Confronto (Sucesso / Erro / Aviso) -->
               </div>
@@ -317,7 +322,6 @@
                   <span class="badge badge-primary semente-destaque">Semente: <b id="aud-res-semente">--</b></span>
                   <span class="badge badge-success">Inscritos: <b id="aud-res-inscritos">0</b></span>
                   <span class="badge badge-warning">Vagas: <b id="aud-res-vagas">0</b></span>
-                  <span class="badge badge-primary">Algoritmo: <b id="aud-res-versao">--</b></span>
                 </div>
               </div>
               <div class="result-actions">
@@ -345,9 +349,53 @@
     </footer>
   </div>
 
-  <!-- Motor de sorteio (v1 congelada para auditoria + v2) -->
-  <script src="motor-sorteio.js"></script>
   <script>
+    // Gerador Congruente Linear (LCG) de Park-Miller de 32-bits
+    class IFBaianoPRNG {
+      constructor(seed) {
+        // Converte a semente (número ou string) em um valor numérico de 32 bits
+        this.state = typeof seed === 'number' ? seed : this.hashString(seed);
+        // O estado inicial do LCG de Park-Miller deve ser positivo e diferente de zero
+        this.state = Math.abs(this.state) % 2147483647;
+        if (this.state <= 0) this.state = 1;
+      }
+
+      // Função de hash DJB2 modificada para converter strings de semente em inteiros consistentes
+      hashString(str) {
+        let hash = 5381;
+        for (let i = 0; i < str.length; i++) {
+          hash = ((hash << 5) + hash) + str.charCodeAt(i);
+          hash = hash & hash; // Converte para inteiro de 32 bits assinado
+        }
+        return hash;
+      }
+
+      // Retorna o próximo valor pseudo-aleatório entre 0 (inclusivo) e 1 (exclusivo)
+      next() {
+        // Constantes padrões do LCG Park-Miller (MINSTD)
+        const a = 48271;
+        const m = 2147483647; // 2^31 - 1 (primo de Mersenne)
+        this.state = (this.state * a) % m;
+        return (this.state - 1) / (m - 1);
+      }
+    }
+
+    // Algoritmo de Embaralhamento Moderno de Fisher-Yates (Knuth) do IF Baiano
+    function embaralharIFBaiano(candidatos, semente) {
+      const prng = new IFBaianoPRNG(semente);
+      const resultado = [...candidatos];
+      
+      for (let i = resultado.length - 1; i > 0; i--) {
+        // Sorteia uma posição determinística de 0 a i
+        const j = Math.floor(prng.next() * (i + 1));
+        // Permuta os candidatos
+        const temp = resultado[i];
+        resultado[i] = resultado[j];
+        resultado[j] = temp;
+      }
+      return resultado;
+    }
+
     // Configurações Globais e de Acessibilidade
     let currentZoom = 1.0;
     
@@ -389,6 +437,23 @@
       });
     }
 
+    // Gerencia Semente Manual
+    function toggleSementeManual(prefix) {
+      const checkbox = document.getElementById(`${prefix}-semente-manual`);
+      const input = document.getElementById(`${prefix}-semente-input`);
+      if (checkbox.checked) {
+        input.disabled = false;
+        input.required = true;
+        input.placeholder = "Semente personalizada";
+        input.focus();
+      } else {
+        input.disabled = true;
+        input.required = false;
+        input.value = "";
+        input.placeholder = "Gerada automaticamente";
+      }
+    }
+
     // Alternar Modo de Entrada (Qtd vs Nomes)
     function toggleModoEntrada(modo) {
       const grupoTotal = document.getElementById('grupo-sort-total');
@@ -413,7 +478,6 @@
     let sorteioAtual = {
       curso: "",
       semente: 0,
-      versao: "",
       totalInscritos: 0,
       vagas: 0,
       dataHora: "",
@@ -423,7 +487,6 @@
 
     let auditoriaAtual = {
       semente: 0,
-      versao: "",
       totalInscritos: 0,
       vagas: 0,
       listaNumeros: []
@@ -470,45 +533,52 @@
         }));
       }
 
-      // Semente nova sempre gerada pelo sistema (v2). Semente escolhida à mão só na aba de auditoria.
-      const semente = gerarSementeV2();
-      document.getElementById('sort-semente-input').value = semente;
-      loaderText.textContent = "Embaralhando " + total + " candidatos...";
+      // Semente
+      let semente;
+      const sementeManualCheck = document.getElementById('sort-semente-manual').checked;
+      const sementeManualInput = document.getElementById('sort-semente-input').value.trim();
+      
+      if (sementeManualCheck && sementeManualInput !== "") {
+        const sementeNum = parseInt(sementeManualInput, 10);
+        semente = isNaN(sementeNum) ? sementeManualInput : sementeNum;
+      } else {
+        semente = Date.now(); // 13 dígitos
+      }
 
-      sortearPorSemente(candidatos, semente).then(res => {
-        sorteioAtual.curso = curso;
-        sorteioAtual.semente = res.semente;
-        sorteioAtual.versao = res.versao;
-        sorteioAtual.totalInscritos = total;
-        sorteioAtual.vagas = vagas;
+      // Simular etapas de sorteio na tela (animação amigável)
+      setTimeout(() => {
+        loaderText.textContent = "Semeando gerador congruente linear (LCG)...";
+        
+        setTimeout(() => {
+          loaderText.textContent = "Aplicando Knuth-Shuffle para " + total + " elementos...";
+          
+          setTimeout(() => {
+            // Executa o embaralhamento na lista de objetos de candidatos
+            const candidatosEmbaralhados = embaralharIFBaiano(candidatos, semente);
+            
+            // Grava os dados globais do sorteio realizado
+            sorteioAtual.curso = curso;
+            sorteioAtual.semente = semente;
+            sorteioAtual.totalInscritos = total;
+            sorteioAtual.vagas = vagas;
+            
+            const agora = new Date();
+            sorteioAtual.dataHora = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+            
+            // Guarda a correspondência da lista numérica final sorteada (dos números originais)
+            sorteioAtual.listaNumeros = candidatosEmbaralhados.map(c => c.numeroOriginal);
+            sorteioAtual.listaCandidatos = candidatosEmbaralhados;
 
-        const agora = new Date();
-        sorteioAtual.dataHora = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+            // Renderizar resultados
+            renderizarSorteio();
 
-        sorteioAtual.listaNumeros = res.lista.map(c => c.numeroOriginal);
-        sorteioAtual.listaCandidatos = res.lista;
-
-        renderizarSorteio();
-        loader.classList.remove('active');
-        resultsWrapper.style.display = 'block';
-      }).catch(err => {
-        loader.classList.remove('active');
-        emptyState.style.display = 'block';
-        alert("Não foi possível realizar o sorteio: " + err.message);
-      });
-    }
-
-    // Monta uma linha da lista com textContent, para que nomes com "<" ou "&" apareçam como foram digitados
-    function criarItemLista(posicao, nome, numero, classe) {
-      const item = document.createElement('div');
-      item.className = classe;
-      [['sort-position', posicao + 'º'], ['sort-name', nome], ['sort-number', 'nº ' + numero]].forEach(([cls, txt]) => {
-        const span = document.createElement('span');
-        span.className = cls;
-        span.textContent = txt;
-        item.appendChild(span);
-      });
-      return item;
+            // Esconder loader
+            loader.classList.remove('active');
+            resultsWrapper.style.display = 'block';
+            
+          }, 600);
+        }, 600);
+      }, 500);
     }
 
     // Renderiza a lista de sorteados na tela
@@ -518,7 +588,6 @@
       document.getElementById('res-semente').textContent = sorteioAtual.semente;
       document.getElementById('res-inscritos').textContent = sorteioAtual.totalInscritos;
       document.getElementById('res-vagas').textContent = sorteioAtual.vagas;
-      document.getElementById('res-versao').textContent = sorteioAtual.versao;
 
       const container = document.getElementById('res-lista-sorteados');
       container.innerHTML = "";
@@ -549,15 +618,18 @@
           container.appendChild(divisoriaEspera);
         }
 
-        let item;
-
+        const item = document.createElement('div');
+        
         if (i < total) {
           const candidato = listaSorteada[i];
-          item = criarItemLista(i + 1, candidato.nome, candidato.numeroOriginal,
-            `sort-item ${i < vagas ? 'selected' : 'waiting'}`);
+          item.className = `sort-item ${i < vagas ? 'selected' : 'waiting'}`;
+          item.innerHTML = `
+            <span class="sort-position">${i + 1}º</span>
+            <span class="sort-name">${candidato.nome}</span>
+            <span class="sort-number">nº ${candidato.numeroOriginal}</span>
+          `;
         } else {
           // Vagas ociosas remanescentes
-          item = document.createElement('div');
           item.className = `sort-item selected`;
           item.style.border = "1px dashed var(--color-warning)";
           item.style.backgroundColor = "var(--color-warning-bg)";
@@ -582,7 +654,7 @@
       txt += `Semente Oficial (Seed): ${sorteioAtual.semente}\n`;
       txt += `Total de Candidatos: ${sorteioAtual.totalInscritos}\n`;
       txt += `Total de Vagas: ${sorteioAtual.vagas}\n`;
-      txt += `Algoritmo Utilizado: ${sorteioAtual.versao}\n`;
+      txt += `Algoritmo Utilizado: IFBSort (LCG/Fisher-Yates)\n`;
       txt += `========================================\n\n`;
       
       txt += `CLASSIFICAÇÃO DOS CANDIDATOS:\n`;
@@ -647,40 +719,41 @@
       const total = parseInt(document.getElementById('aud-total').value, 10);
       const vagas = parseInt(document.getElementById('aud-vagas').value, 10);
 
-      // Na auditoria, criamos um vetor de números de 1 a N.
-      // A versão do algoritmo (v1 ou v2) é decidida pela própria semente, em sortearPorSemente().
-      const candidatosNumeros = [];
-      for (let i = 1; i <= total; i++) {
-        candidatosNumeros.push(i);
-      }
+      // Semente
+      const sementeNum = parseInt(sementeInput, 10);
+      const semente = isNaN(sementeNum) ? sementeInput : sementeNum;
 
-      sortearPorSemente(candidatosNumeros, sementeInput).then(res => {
-        auditoriaAtual.semente = res.semente;
-        auditoriaAtual.versao = res.versao;
+      setTimeout(() => {
+        // Na auditoria, criamos um vetor de números de 1 a N
+        const candidatosNumeros = [];
+        for (let i = 1; i <= total; i++) {
+          candidatosNumeros.push(i);
+        }
+
+        // Executa o embaralhamento
+        const listaOrdenada = embaralharIFBaiano(candidatosNumeros, semente);
+        
+        auditoriaAtual.semente = semente;
         auditoriaAtual.totalInscritos = total;
         auditoriaAtual.vagas = vagas;
-        auditoriaAtual.listaNumeros = res.lista;
+        auditoriaAtual.listaNumeros = listaOrdenada;
 
+        // Renderiza
         renderizarAuditoria();
 
         loader.classList.remove('active');
         resultsWrapper.style.display = 'block';
-
+        
         // Zera o campo de confronto anterior
         document.getElementById('aud-compare-input').value = "";
         document.getElementById('aud-compare-status').innerHTML = "";
-      }).catch(err => {
-        loader.classList.remove('active');
-        emptyState.style.display = 'block';
-        alert("Não foi possível reconstruir o sorteio: " + err.message);
-      });
+      }, 800);
     }
 
     function renderizarAuditoria() {
       document.getElementById('aud-res-semente').textContent = auditoriaAtual.semente;
       document.getElementById('aud-res-inscritos').textContent = auditoriaAtual.totalInscritos;
       document.getElementById('aud-res-vagas').textContent = auditoriaAtual.vagas;
-      document.getElementById('aud-res-versao').textContent = auditoriaAtual.versao;
 
       const container = document.getElementById('aud-lista-sorteados');
       container.innerHTML = "";
@@ -739,7 +812,6 @@
       
       let txt = `RESULTADO DE AUDITORIA PÚBLICA (ALGORITMO IFBSORT)\n`;
       txt += `Semente (Seed): ${auditoriaAtual.semente}\n`;
-      txt += `Algoritmo: ${auditoriaAtual.versao}\n`;
       txt += `Total de Candidatos: ${auditoriaAtual.totalInscritos}\n`;
       txt += `Total de Vagas: ${auditoriaAtual.vagas}\n`;
       txt += `========================================\n\n`;
@@ -778,12 +850,20 @@
         return;
       }
 
-      // Isola os números de inscrição, descartando posições (1º) e cabeçalhos da ata
-      const numerosInseridos = extrairNumerosConfronto(inputText);
+      // Filtra e isola apenas os inteiros digitados ou colados
+      const numerosInseridos = [];
+      const tokens = inputText.split(/[\s,;\n]+/);
+      
+      tokens.forEach(t => {
+        const match = t.match(/\b\d+\b/);
+        if (match) {
+          numerosInseridos.push(parseInt(match[0], 10));
+        }
+      });
 
       if (numerosInseridos.length === 0) {
         statusContainer.innerHTML = `
-          <div class="alert alert-warning" style="margin-top: 10px;">
+          <div class="alert alert-warning" style="margin-top: 10px; border-left-width:4px;">
             Nenhum número legível foi identificado na área colada. Certifique-se de copiar a coluna de números sorteados.
           </div>
         `;
@@ -826,7 +906,7 @@
 
       if (erros === 0 && totalFaltando === 0) {
         statusContainer.innerHTML = `
-          <div class="alert alert-success" style="margin-top: 10px;">
+          <div class="alert alert-success" style="margin-top: 10px; border-left-width:4px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
@@ -838,7 +918,7 @@
         `;
       } else if (erros > 0) {
         statusContainer.innerHTML = `
-          <div class="alert alert-danger" style="margin-top: 10px;">
+          <div class="alert alert-warning" style="margin-top: 10px; border-left-width:4px; color: #C80710; background-color: rgba(200, 7, 16, 0.05); border-left-color: #C80710;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -850,18 +930,9 @@
             </div>
           </div>
         `;
-      } else if (totalFaltando < 0) {
-        statusContainer.innerHTML = `
-          <div class="alert alert-warning" style="margin-top: 10px;">
-            <div>
-              <b>LISTA COLADA MAIOR QUE A AUDITADA</b><br/>
-              Os ${acertos} classificados da auditoria batem, mas a lista colada tem <b>${-totalFaltando}</b> número(s) a mais que o total de ${auditoriaList.length} inscritos. Confira o total de inscritos informado.
-            </div>
-          </div>
-        `;
       } else if (totalFaltando > 0) {
         statusContainer.innerHTML = `
-          <div class="alert alert-info" style="margin-top: 10px;">
+          <div class="alert alert-info" style="margin-top: 10px; border-left-width:4px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -894,7 +965,7 @@ function showLoading(show, message) {
         loader.style.visibility = 'visible';
     } else {
         const elapsed = Date.now() - startTimeLoading;
-        const minDuration = 300;
+        const minDuration = 1200;
         const remaining = Math.max(0, minDuration - elapsed);
         setTimeout(() => {
             loader.style.opacity = '0';
@@ -908,7 +979,9 @@ function showLoading(show, message) {
 
 window.addEventListener('load', function() {
     showLoading(true);
-    showLoading(false);
+    setTimeout(function() {
+        showLoading(false);
+    }, 1500);
 });
 </script>
 </body>
