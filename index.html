@@ -155,9 +155,17 @@
         <section class="card print-visible" style="position: relative; min-height: 400px;">
           <!-- Loader de Embaralhamento -->
           <div id="sort-loader" class="loader-overlay">
-            <div class="spinner"></div>
-            <div class="loading-text" id="loader-text">Embaralhando candidatos...</div>
-            <div class="loading-subtext">Algoritmo IFBSort v2 (SHA-256 e Fisher-Yates)</div>
+            <div class="loader-container">
+              <div class="loader-logo-wrapper">
+                <img src="marca-if-baiano-vertical.png" alt="Logo IF Baiano" class="loader-logo-bg">
+                <img src="marca-if-baiano-vertical.png" alt="Logo IF Baiano" class="loader-logo-fill">
+              </div>
+              <div class="loader-bar">
+                <div class="loader-progress"></div>
+              </div>
+              <div class="loader-text" id="loader-text">Embaralhando candidatos...</div>
+              <div class="loading-subtext">Algoritmo IFBSort v2 (SHA-256 e Fisher-Yates)</div>
+            </div>
           </div>
 
           <h2 class="card-title">
@@ -473,25 +481,51 @@
       // Semente nova sempre gerada pelo sistema (v2). Semente escolhida à mão só na aba de auditoria.
       const semente = gerarSementeV2();
       document.getElementById('sort-semente-input').value = semente;
-      loaderText.textContent = "Embaralhando " + total + " candidatos...";
+
+      // O cálculo do sorteio (SHA-256 + Fisher-Yates) é praticamente instantâneo,
+      // o que faz o resultado parecer suspeito demais, como se já estivesse pronto
+      // de antemão. As linhas abaixo impõem um tempo mínimo de exibição do loader
+      // e alternam mensagens de etapa, para que o usuário veja o processamento
+      // acontecer de fato antes do resultado aparecer.
+      const mensagensProcessamento = [
+        "Coletando " + total + " candidatos...",
+        "Gerando semente criptográfica SHA-256...",
+        "Embaralhando com o algoritmo Fisher-Yates...",
+        "Verificando integridade do resultado..."
+      ];
+      let indiceMensagem = 0;
+      loaderText.textContent = mensagensProcessamento[indiceMensagem];
+      const intervaloMensagens = setInterval(() => {
+        indiceMensagem = (indiceMensagem + 1) % mensagensProcessamento.length;
+        loaderText.textContent = mensagensProcessamento[indiceMensagem];
+      }, 550);
+
+      const inicioProcessamento = Date.now();
+      const duracaoMinimaMs = 2200;
 
       sortearPorSemente(candidatos, semente).then(res => {
-        sorteioAtual.curso = curso;
-        sorteioAtual.semente = res.semente;
-        sorteioAtual.versao = res.versao;
-        sorteioAtual.totalInscritos = total;
-        sorteioAtual.vagas = vagas;
+        const tempoRestante = Math.max(0, duracaoMinimaMs - (Date.now() - inicioProcessamento));
+        setTimeout(() => {
+          clearInterval(intervaloMensagens);
 
-        const agora = new Date();
-        sorteioAtual.dataHora = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+          sorteioAtual.curso = curso;
+          sorteioAtual.semente = res.semente;
+          sorteioAtual.versao = res.versao;
+          sorteioAtual.totalInscritos = total;
+          sorteioAtual.vagas = vagas;
 
-        sorteioAtual.listaNumeros = res.lista.map(c => c.numeroOriginal);
-        sorteioAtual.listaCandidatos = res.lista;
+          const agora = new Date();
+          sorteioAtual.dataHora = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
 
-        renderizarSorteio();
-        loader.classList.remove('active');
-        resultsWrapper.style.display = 'block';
+          sorteioAtual.listaNumeros = res.lista.map(c => c.numeroOriginal);
+          sorteioAtual.listaCandidatos = res.lista;
+
+          renderizarSorteio();
+          loader.classList.remove('active');
+          resultsWrapper.style.display = 'block';
+        }, tempoRestante);
       }).catch(err => {
+        clearInterval(intervaloMensagens);
         loader.classList.remove('active');
         emptyState.style.display = 'block';
         alert("Não foi possível realizar o sorteio: " + err.message);
