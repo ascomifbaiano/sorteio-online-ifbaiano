@@ -11,6 +11,7 @@ Ferramenta web, sem servidor, para realizar e auditar sorteios de vagas do IF Ba
 | `styles.css` | Estilos, modo de alto contraste e layout de impressão da ata. |
 | `auditar_sorteio.py` | Verificador independente em Python, para conferir uma ata sem usar o navegador. |
 | `harness.py` | Autoteste padrão do laboratório. |
+| `favicon-if-baiano.ico`, `favicon-if-baiano.png` | Favicon oficial do IF Baiano, declarado no `<head>` do `index.html`. |
 | `Software sorteio eletrônico/` | Ferramenta original do IFSC (2011), mantida como referência histórica. |
 
 ## Como o sorteio funciona
@@ -63,3 +64,8 @@ O verificador em Python foi escrito a partir da especificação, sem reaproveita
 - Para eliminar de vez a escolha da semente pelo operador, uma evolução possível é derivá-la de um valor público anunciado antes, como o resultado de um concurso da Loteria Federal.
 
 Desenvolvido pela DiCom, Diretoria de Comunicação do IF Baiano.
+
+## Log de Atualizações
+
+### 01/10/2026
+- Corrigido o favicon, que não carregava. O `index.html` não declarava nenhum ícone, e o `favicon.ico` da pasta era uma cópia em PNG do logo vertical com a extensão trocada. Copiados os favicons oficiais (`favicon-if-baiano.ico` e `favicon-if-baiano.png`, de `.agents/`) e declarados no `<head>`. Os arquivos antigos `favicon.ico` e `favicon.png` foram mantidos, mas não são mais usados.
