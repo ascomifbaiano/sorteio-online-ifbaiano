@@ -876,3 +876,204 @@ body.high-contrast .loader-text {
         display: none !important;
     }
 }
+
+/* ===================== Lista de nomes a partir de arquivo (01/10/2026) ===================== */
+
+/* Esconde o campo de arquivo nativo sem tirá-lo da navegação por teclado */
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.arquivo-lista {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.arquivo-lista label.btn {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.visualmente-oculto:focus-visible + label.btn {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+#sort-arquivo-status {
+  width: 100%;
+}
+
+#sort-arquivo-status .alert {
+  word-break: break-word;
+}
+
+/* Nota da aba de auditoria com link para o tutorial */
+.nota-auditoria {
+  margin: 12px 0 4px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.link-tutorial {
+  display: inline-block;
+  margin-top: 4px;
+  font-weight: 700;
+  color: var(--primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link-tutorial:hover,
+.link-tutorial:focus-visible {
+  color: var(--accent-color);
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+body.high-contrast .link-tutorial {
+  color: #FFD700;
+}
+
+/* ===================== Página do tutorial de auditoria ===================== */
+
+.tutorial {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.tutorial .card h2 {
+  font-size: 1.35rem;
+  margin-bottom: 12px;
+  color: var(--primary-hover);
+}
+
+.tutorial p,
+.tutorial li {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.tutorial p + p {
+  margin-top: 10px;
+}
+
+.tutorial ol,
+.tutorial ul {
+  padding-left: 1.4rem;
+  display: grid;
+  gap: 8px;
+}
+
+.tutorial code,
+.tutorial .exemplo {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 0.92rem;
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+}
+
+.tutorial code {
+  padding: 1px 6px;
+}
+
+.tutorial .exemplo {
+  display: block;
+  padding: 12px 14px;
+  margin: 10px 0;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.tutorial-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Exemplo lado a lado: ata, auditoria e lista publicada */
+.tutorial-cruzamento {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.tutorial-cruzamento > div {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: 12px 14px;
+  background-color: var(--bg-page);
+}
+
+.tutorial-cruzamento .rotulo {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+.tutorial-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+.tutorial-tabela th,
+.tutorial-tabela td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+.tutorial-tabela th {
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .tutorial-tabela,
+  .tutorial-tabela tbody,
+  .tutorial-tabela tr,
+  .tutorial-tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .tutorial-tabela thead {
+    display: none;
+  }
+
+  .tutorial-tabela td:first-child {
+    font-weight: 700;
+    border-bottom: none;
+    padding-bottom: 2px;
+  }
+}
+
+@media print {
+  .tutorial-topo .btn {
+    display: none !important;
+  }
+}

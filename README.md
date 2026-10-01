@@ -7,6 +7,7 @@ Ferramenta web, sem servidor, para realizar e auditar sorteios de vagas do IF Ba
 | Arquivo | Função |
 |---|---|
 | `index.html` | Interface com as abas "Realizar Sorteio" e "Auditar Sorteio". |
+| `como-auditar.html` | Tutorial de auditoria em Linguagem Simples, com link na aba "Auditar Sorteio". |
 | `motor-sorteio.js` | Motor de sorteio (versões 1 e 2) e leitura da lista colada no confronto. |
 | `styles.css` | Estilos, modo de alto contraste e layout de impressão da ata. |
 | `auditar_sorteio.py` | Verificador independente em Python, para conferir uma ata sem usar o navegador. |
@@ -66,6 +67,14 @@ O verificador em Python foi escrito a partir da especificação, sem reaproveita
 Desenvolvido pela DiCom, Diretoria de Comunicação do IF Baiano.
 
 ## Log de Atualizações
+
+### 01/10/2026 (lista por arquivo e tutorial de auditoria)
+- No modo "Lista de Nomes", novo botão "Carregar lista de um arquivo (.csv ou .txt)". O arquivo é lido só no navegador, nada é enviado nem salvo, e o campo de arquivo é limpo após a leitura. O arquivo apenas preenche a caixa de nomes, então o sorteio, a ata e o CSV exportado funcionam como antes.
+- A leitura aceita UTF-8 (com ou sem BOM) e Windows-1252 (padrão do Excel em português), separadores ponto e vírgula, vírgula ou tabulação, e campos entre aspas. Com várias colunas, as células preenchidas são unidas por " - " (ex.: "2026014 - Nome").
+- A primeira linha só é descartada como cabeçalho quando todas as células são títulos conhecidos (Nome, Inscrição, Curso, Campus etc.), para nunca descartar um candidato e deslocar a numeração. A mensagem informa a linha descartada e mostra os nº 1, nº 2 e o último para conferência com a lista publicada.
+- Aviso quando o arquivo parece conter CPF, porque o conteúdo de cada linha aparece na ata pública. Limite de 5 MB por arquivo.
+- Nova página `como-auditar.html`, com passo a passo, explicação de por que a auditoria mostra números e não nomes, significado de cada mensagem do confronto, o que fazer se o resultado não bater e conferência pelo `auditar_sorteio.py`. Link na aba de auditoria.
+- `motor-sorteio.js` não foi alterado: resultados de sorteios já publicados continuam os mesmos.
 
 ### 01/10/2026
 - Corrigido o favicon, que não carregava. O `index.html` não declarava nenhum ícone, e o `favicon.ico` da pasta era uma cópia em PNG do logo vertical com a extensão trocada. Copiados os favicons oficiais (`favicon-if-baiano.ico` e `favicon-if-baiano.png`, de `.agents/`) e declarados no `<head>`. Os arquivos antigos `favicon.ico` e `favicon.png` foram mantidos, mas não são mais usados.

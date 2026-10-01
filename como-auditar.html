@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Como Auditar um Sorteio - Sorteio Eletrônico IF Baiano</title>
+  <meta name="description" content="Passo a passo para conferir, de forma independente, o resultado de um sorteio eletrônico público do IF Baiano.">
+  <!-- Favicon Institucional IF Baiano -->
+  <link rel="icon" type="image/x-icon" href="favicon-if-baiano.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-if-baiano.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-if-baiano.png">
+  <link rel="apple-touch-icon" href="favicon-if-baiano.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Barra de Acessibilidade -->
+  <div class="accessibility-bar" role="navigation" aria-label="Controles de Acessibilidade">
+    <span>Acessibilidade:</span>
+    <button class="accessibility-btn" onclick="adjustFontSize(0.1)" aria-label="Aumentar tamanho do texto">A+</button>
+    <button class="accessibility-btn" onclick="adjustFontSize(-0.1)" aria-label="Diminuir tamanho do texto">A-</button>
+    <button class="accessibility-btn" onclick="toggleHighContrast()" aria-label="Alternar Alto Contraste">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a10 10 0 0 0 0 20v-20Z" fill="currentColor"></path>
+      </svg>
+      Alto Contraste
+    </button>
+  </div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo-container">
+        <img src="marca-if-baiano-horizontal.png" alt="Logotipo do IF Baiano">
+      </div>
+      <div class="header-info">
+        <h1>Como Auditar um Sorteio</h1>
+        <p>Passo a passo para qualquer pessoa conferir, por conta própria, o resultado de um sorteio eletrônico público do IF Baiano.</p>
+      </div>
+    </header>
+
+    <div class="tutorial-topo">
+      <a href="index.html" class="btn btn-outline btn-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Voltar para o sorteio
+      </a>
+      <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">Imprimir este tutorial</button>
+    </div>
+
+    <main class="tutorial">
+
+      <section class="card" aria-labelledby="t-para-que">
+        <h2 id="t-para-que">Para que serve a auditoria</h2>
+        <p>Todo sorteio feito neste sistema gera uma <b>semente</b>, que é um código publicado na ata. A partir da mesma semente, o sistema sempre produz exatamente a mesma classificação.</p>
+        <p>Por isso, qualquer pessoa pode refazer o sorteio e comparar com o resultado oficial. Se a classificação for igual, o sorteio não foi alterado depois de realizado.</p>
+      </section>
+
+      <section class="card" aria-labelledby="t-precisa">
+        <h2 id="t-precisa">O que você precisa ter em mãos</h2>
+        <ul>
+          <li><b>A ata do sorteio</b>, com a semente, o total de candidatos inscritos e o número de vagas.</li>
+          <li><b>A lista numerada de inscritos</b>, publicada antes do sorteio. Ela mostra qual número pertence a cada candidato.</li>
+          <li><b>O resultado oficial</b>, que pode ser o texto da ata, o arquivo CSV exportado ou só os números de inscrição em ordem.</li>
+        </ul>
+      </section>
+
+      <section class="card" aria-labelledby="t-passos">
+        <h2 id="t-passos">Passo a passo no site</h2>
+        <ol>
+          <li>Abra a página do sorteio e clique na aba <b>Auditar Sorteio (Transparência)</b>.</li>
+          <li>No campo <b>Semente (Seed) Publicada</b>, copie a semente exatamente como está na ata. Não acrescente nem retire espaços ou letras.</li>
+          <li>No campo <b>Total de Candidatos Inscritos</b>, digite o total informado na ata.</li>
+          <li>No campo <b>Número de Vagas</b>, digite o número de vagas da ata.</li>
+          <li>Clique em <b>Gerar Lista de Auditoria</b>. O sistema mostra a classificação refeita, separando as vagas regulares da lista de espera.</li>
+          <li>No campo <b>Confrontar com o Resultado Publicado</b>, cole o resultado oficial. A comparação acontece na hora, sem precisar clicar em nada.</li>
+          <li>Leia a mensagem que aparece abaixo do campo. Cada mensagem está explicada mais adiante nesta página.</li>
+        </ol>
+      </section>
+
+      <section class="card" aria-labelledby="t-numeros">
+        <h2 id="t-numeros">Por que a auditoria mostra números, e não nomes</h2>
+        <p>A auditoria recebe apenas a semente, o total de inscritos e as vagas. Ela não recebe a lista de nomes. Por isso, o resultado aparece como <b>"Candidato nº 14"</b>, e não com o nome da pessoa.</p>
+        <p>Isso vale também para sorteios feitos com lista de nomes. Nesses casos, o número de cada candidato é a posição dele na lista publicada antes do sorteio: o primeiro nome é o nº 1, o segundo é o nº 2, e assim por diante.</p>
+        <p>Para saber quem é cada número, use a lista numerada publicada. Veja um exemplo com dados fictícios:</p>
+
+        <div class="tutorial-cruzamento">
+          <div>
+            <span class="rotulo">Na ata oficial</span>
+            <code>1º - Nome de Exemplo (Inscrição: 14)</code>
+          </div>
+          <div>
+            <span class="rotulo">Na auditoria</span>
+            <code>1º colocado: Candidato nº 14</code>
+          </div>
+          <div>
+            <span class="rotulo">Na lista publicada</span>
+            <code>14 - Nome de Exemplo</code>
+          </div>
+        </div>
+
+        <p>Os três registros apontam o mesmo número na mesma posição. Assim, o 1º colocado da auditoria é a mesma pessoa que aparece em 1º lugar na ata.</p>
+        <p><b>Importante:</b> se a ordem dos nomes usada no sorteio for diferente da lista publicada, os números passam a apontar para outras pessoas. Por isso, a lista numerada precisa ser publicada antes do sorteio e não pode ser reordenada depois.</p>
+      </section>
+
+      <section class="card" aria-labelledby="t-mensagens">
+        <h2 id="t-mensagens">O que significa cada mensagem do confronto</h2>
+        <table class="tutorial-tabela">
+          <thead>
+            <tr><th scope="col">Mensagem</th><th scope="col">O que quer dizer</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Confronto bateu 100%</td>
+              <td>Todas as posições do resultado colado são iguais às da auditoria. O resultado oficial confere com a semente publicada.</td>
+            </tr>
+            <tr>
+              <td>Divergência encontrada</td>
+              <td>Pelo menos uma posição é diferente. As posições com diferença ficam marcadas em vermelho na lista auditada.</td>
+            </tr>
+            <tr>
+              <td>Lista parcialmente confrontada</td>
+              <td>As posições coladas conferem, mas faltam candidatos para completar a lista. Isso acontece quando se cola só uma parte do resultado.</td>
+            </tr>
+            <tr>
+              <td>Lista colada maior que a auditada</td>
+              <td>O resultado colado tem mais números que o total de inscritos informado. Confira o total digitado no passo 3.</td>
+            </tr>
+            <tr>
+              <td>Nenhum número legível foi identificado</td>
+              <td>O texto colado não tem números de inscrição. Copie de novo a ata, o CSV ou a coluna de números.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" aria-labelledby="t-nao-bate">
+        <h2 id="t-nao-bate">Se o resultado não bater</h2>
+        <p>Antes de concluir que há erro no sorteio, confira estes pontos:</p>
+        <ul>
+          <li>A semente foi copiada inteira, sem espaços no início ou no fim. Sementes novas começam com <code>v2-</code>.</li>
+          <li>O total de inscritos e o número de vagas são os mesmos da ata.</li>
+          <li>O resultado colado está em ordem de classificação, do 1º ao último colocado.</li>
+        </ul>
+        <p>Se a diferença continuar, procure a comissão responsável pelo processo seletivo. Informe a semente, o total de inscritos, as vagas e as posições marcadas em vermelho.</p>
+      </section>
+
+      <section class="card" aria-labelledby="t-python">
+        <h2 id="t-python">Conferir sem usar este site</h2>
+        <p>Quem preferir não depender desta página pode usar o verificador em Python <code>auditar_sorteio.py</code>, disponível junto com o código do sistema. Ele foi escrito a partir das regras públicas do algoritmo, sem reaproveitar o código do site.</p>
+        <p>Informe a semente, o total de inscritos e as vagas, nesta ordem:</p>
+        <span class="exemplo">python auditar_sorteio.py v2-3f9a1c0b7e24d568 150 40</span>
+        <p>Para sementes novas, iniciadas por <code>v2-</code>, o algoritmo pode ser reproduzido em qualquer linguagem de programação:</p>
+        <span class="exemplo">para i de N-1 até 1:
+    h = SHA-256( UTF-8( semente + ":" + i ) )
+    x = inteiro sem sinal de 64 bits dos 8 primeiros bytes de h (big-endian)
+    j = x mod (i + 1)
+    troca as posições i e j da lista [1, 2, ..., N]</span>
+        <p>Sorteios feitos antes de 28/09/2026 usam sementes só com números. Essas sementes continuam valendo e são auditadas da mesma forma, no site ou no verificador em Python.</p>
+      </section>
+
+    </main>
+
+    <footer>
+      <p>Desenvolvido pela DiCom - Diretoria de Comunicação</p>
+      <p style="font-size: 0.75rem; margin-top: 5px; opacity: 0.8;">IF Baiano</p>
+    </footer>
+  </div>
+
+  <script>
+    let currentZoom = 1.0;
+
+    function adjustFontSize(amount) {
+      currentZoom = Math.min(1.6, Math.max(0.8, currentZoom + amount));
+      document.documentElement.style.setProperty('--font-scale', currentZoom + 'rem');
+    }
+
+    function toggleHighContrast() {
+      document.body.classList.toggle('high-contrast');
+      localStorage.setItem('high-contrast', document.body.classList.contains('high-contrast') ? '1' : '0');
+    }
+
+    if (localStorage.getItem('high-contrast') === '1') {
+      document.body.classList.add('high-contrast');
+    }
+  </script>
+</body>
+</html>

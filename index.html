@@ -129,6 +129,21 @@
               <label for="sort-nomes">Nomes ou Inscrições dos Candidatos (um por linha)</label>
               <textarea id="sort-nomes" rows="8" placeholder="João Silva&#10;Maria Oliveira&#10;Carlos Santos"></textarea>
               <span class="input-help">Cada linha recebe um número pela ordem em que aparece. Use a mesma ordem da lista de inscritos publicada antes do sorteio.</span>
+
+              <div class="arquivo-lista">
+                <input type="file" id="sort-arquivo" class="visualmente-oculto" accept=".csv,.txt,text/csv,text/plain" onchange="carregarListaArquivo(this)" aria-describedby="sort-arquivo-ajuda">
+                <label for="sort-arquivo" class="btn btn-outline btn-sm">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <polyline points="9 15 12 12 15 15"></polyline>
+                  </svg>
+                  Carregar lista de um arquivo (.csv ou .txt)
+                </label>
+                <span id="sort-arquivo-ajuda" class="input-help">O arquivo é lido só no seu computador. Nada é enviado pela internet e nada fica salvo: ao recarregar a página, a lista some. Não inclua CPF, telefone ou endereço, porque o conteúdo de cada linha aparece na ata pública.</span>
+                <div id="sort-arquivo-status" role="status" aria-live="polite"></div>
+              </div>
             </div>
 
             <div class="form-row-2">
@@ -259,6 +274,11 @@
                 <b>O que é Auditoria?</b> Qualquer sorteio eletrônico oficial do IF Baiano publica sua Semente ao final. Informando a mesma semente, o mesmo número de candidatos e a mesma quantidade de vagas, o sistema gerará exatamente o mesmo resultado. A versão do algoritmo é reconhecida pela própria semente: sementes numéricas são da versão 1, e sementes iniciadas por <b>v2-</b> são da versão 2.
               </div>
             </div>
+
+            <p class="nota-auditoria">
+              A auditoria mostra os <b>números de inscrição</b>, e não os nomes. Para saber quem é cada número, use a lista numerada publicada antes do sorteio.
+              <a href="como-auditar.html" class="link-tutorial">Como auditar, passo a passo</a>
+            </p>
 
             <div class="form-group" style="margin-top: 10px;">
               <label for="aud-semente">Semente (Seed) Publicada</label>
@@ -420,6 +440,139 @@
         inputTotal.required = false;
         inputNomes.required = true;
       }
+    }
+
+    // ===================== Leitura local de lista (.csv ou .txt) =====================
+    // O arquivo é lido na memória do navegador e só preenche a caixa de nomes.
+    // Nada é enviado pela rede nem gravado (sem localStorage), e o campo de arquivo é limpo após a leitura.
+
+    const TAMANHO_MAXIMO_ARQUIVO = 5 * 1024 * 1024;
+    const PADRAO_CPF = /\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/;
+    // Só é cabeçalho a primeira linha em que TODAS as células são títulos conhecidos; assim um candidato
+    // chamado, por exemplo, "Ana Nomeriano" nunca é descartado, o que deslocaria a numeração da lista.
+    const PADRAO_CABECALHO = /^(n[ºo°.]?\s*(de\s*)?)?(nome( completo| do candidato| da candidata)?|candidat[oa]s?|inscri[cç][aã]o|inscritos?|n[uú]mero( de inscri[cç][aã]o)?|cpf|curso|campus|classifica[cç][aã]o|situa[cç][aã]o|status|e-?mail|telefone)$/i;
+
+    // Excel em português costuma salvar em Windows-1252; tenta UTF-8 primeiro e só então o padrão antigo
+    function decodificarArquivo(buffer) {
+      let texto;
+      try {
+        texto = new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+      } catch (erro) {
+        texto = new TextDecoder('windows-1252').decode(buffer);
+      }
+      return texto.replace(/^﻿/, '');
+    }
+
+    function detectarSeparador(linhas) {
+      const amostra = linhas.slice(0, 20).join('\n');
+      const contagens = [';', '\t', ','].map(sep => ({ sep, n: amostra.split(sep).length - 1 }));
+      const melhor = contagens.sort((a, b) => b.n - a.n)[0];
+      return melhor.n > 0 ? melhor.sep : null;
+    }
+
+    // Separa uma linha em campos, respeitando aspas ("Silva; João" continua sendo um campo só)
+    function separarCampos(linha, separador) {
+      if (!separador) return [linha];
+      const campos = [];
+      let atual = '';
+      let entreAspas = false;
+      for (let i = 0; i < linha.length; i++) {
+        const c = linha[i];
+        if (c === '"') {
+          if (entreAspas && linha[i + 1] === '"') { atual += '"'; i++; }
+          else entreAspas = !entreAspas;
+        } else if (c === separador && !entreAspas) {
+          campos.push(atual);
+          atual = '';
+        } else {
+          atual += c;
+        }
+      }
+      campos.push(atual);
+      return campos.map(campo => campo.trim());
+    }
+
+    // Converte o texto do arquivo em uma linha por candidato. Com várias colunas, junta as preenchidas
+    // com " - " (ex.: "2026014 - Maria Souza"). A primeira linha é descartada se for um cabeçalho.
+    function lerListaDoTexto(texto) {
+      const linhas = texto.split(/\r?\n/).filter(l => l.trim().length > 0);
+      const separador = detectarSeparador(linhas);
+      const registros = linhas.map(l => separarCampos(l, separador).filter(c => c.length > 0));
+
+      let cabecalho = '';
+      if (registros.length > 0 && registros[0].length > 0 && registros[0].every(c => PADRAO_CABECALHO.test(c))) {
+        cabecalho = registros.shift().join(' - ');
+      }
+
+      const nomes = registros.map(r => r.join(' - ')).filter(n => n.length > 0);
+      return { nomes, cabecalho, temCpf: nomes.some(n => PADRAO_CPF.test(n)) };
+    }
+
+    function mostrarStatusArquivo(tipo, titulo, linhasDetalhe) {
+      const status = document.getElementById('sort-arquivo-status');
+      status.innerHTML = '';
+      const caixa = document.createElement('div');
+      caixa.className = `alert alert-${tipo}`;
+      caixa.style.marginTop = '8px';
+      const conteudo = document.createElement('div');
+      const forte = document.createElement('b');
+      forte.textContent = titulo;
+      conteudo.appendChild(forte);
+      linhasDetalhe.forEach(texto => {
+        conteudo.appendChild(document.createElement('br'));
+        conteudo.appendChild(document.createTextNode(texto));
+      });
+      caixa.appendChild(conteudo);
+      status.appendChild(caixa);
+    }
+
+    function carregarListaArquivo(campo) {
+      const arquivo = campo.files && campo.files[0];
+      if (!arquivo) return;
+
+      if (arquivo.size > TAMANHO_MAXIMO_ARQUIVO) {
+        mostrarStatusArquivo('danger', 'Arquivo muito grande.', ['O limite é de 5 MB. Confira se escolheu a lista certa.']);
+        campo.value = '';
+        return;
+      }
+
+      const caixaNomes = document.getElementById('sort-nomes');
+      if (caixaNomes.value.trim() && !confirm('A caixa de nomes já tem conteúdo. Deseja substituir pela lista do arquivo?')) {
+        campo.value = '';
+        return;
+      }
+
+      const leitor = new FileReader();
+      leitor.onload = () => {
+        const { nomes, cabecalho, temCpf } = lerListaDoTexto(decodificarArquivo(leitor.result));
+        campo.value = '';
+
+        if (nomes.length === 0) {
+          mostrarStatusArquivo('danger', 'Nenhum nome encontrado no arquivo.', ['Use um arquivo com um candidato por linha.']);
+          return;
+        }
+
+        caixaNomes.value = nomes.join('\n');
+
+        const conferencia = [`nº 1: ${nomes[0]}`];
+        if (nomes.length > 2) conferencia.push(`nº 2: ${nomes[1]}`);
+        if (nomes.length > 1) conferencia.push(`nº ${nomes.length}: ${nomes[nomes.length - 1]}`);
+
+        const detalhes = [
+          `${nomes.length} candidato(s) carregado(s).`,
+          ...(cabecalho ? [`A primeira linha ("${cabecalho}") foi tratada como títulos de coluna e não entrou na lista.`] : []),
+          `Confira com a lista publicada: ${conferencia.join('; ')}.`
+        ];
+        if (temCpf) {
+          detalhes.push('Atenção: o arquivo parece conter CPF. O conteúdo de cada linha aparece na ata pública. Remova o CPF antes de sortear.');
+        }
+        mostrarStatusArquivo(temCpf ? 'warning' : 'success', 'Lista carregada.', detalhes);
+      };
+      leitor.onerror = () => {
+        campo.value = '';
+        mostrarStatusArquivo('danger', 'Não foi possível ler o arquivo.', ['Tente salvar a planilha novamente como CSV e carregue outra vez.']);
+      };
+      leitor.readAsArrayBuffer(arquivo);
     }
 
     // Variáveis locais para armazenar resultados de sorteios atuais
